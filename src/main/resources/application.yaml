@@ -1,0 +1,20 @@
+server:
+  port: 8085
+  servlet:
+    session:
+      tracking-modes: cookie
+
+spring:
+  jpa:
+    database: POSTGRESQL
+    show-sql: false
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: 2400024
+    driver-class-name: org.postgresql.Driver
+
+jwt:
+  key: t911ur00
+  expirationDay: 2
