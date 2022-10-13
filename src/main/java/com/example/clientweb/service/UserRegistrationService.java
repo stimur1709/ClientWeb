@@ -1,6 +1,6 @@
 package com.example.clientweb.service;
 
-import com.example.clientweb.dto.PersonDTO;
+import com.example.clientweb.dto.RegistrationDTO;
 import com.example.clientweb.model.ContactType;
 import com.example.clientweb.model.User;
 import com.example.clientweb.model.UserContact;
@@ -20,10 +20,10 @@ public class UserRegistrationService {
         this.generator = generator;
     }
 
-    public void registrationUser(PersonDTO personDTO) {
-        User user = new User(personDTO.getPassword(), personDTO.getUsername(),
-                personDTO.getFirstname(), personDTO.getLastname());
-        UserContact contact = new UserContact(user, ContactType.MAIL, personDTO.getContact(), generator.getSecretCode());
+    public void registrationUser(RegistrationDTO registrationDTO) {
+        User user = new User(registrationDTO.getPassword(), registrationDTO.getUsername(),
+                registrationDTO.getFirstname(), registrationDTO.getLastname());
+        UserContact contact = new UserContact(user, ContactType.MAIL, registrationDTO.getEmail(), generator.getSecretCode());
 
         userService.save(user);
         userContactService.save(contact);

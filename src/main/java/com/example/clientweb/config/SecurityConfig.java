@@ -44,8 +44,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/my", "/profile").hasRole("USER")
                 .antMatchers("/**").permitAll()
                 .and().formLogin()
-                .loginPage("/signin").failureUrl("/signin")
-                .and().logout().logoutUrl("/logout").deleteCookies("token")
+                .loginPage("/api/auth/login")
+                .and().logout().logoutUrl("/logout").deleteCookies("jwt-token")
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
