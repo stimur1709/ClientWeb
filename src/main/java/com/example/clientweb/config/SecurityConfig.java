@@ -45,12 +45,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/my", "/profile").hasRole("USER")
-                .antMatchers("/api/auth/login", "/api/auth/registration", "/error").permitAll()
-                .and().formLogin()
-                .loginPage("/api/auth/login")
-                .and().logout().logoutUrl("/logout").deleteCookies("jwt-token")
-                .and().sessionManagement()
+                .antMatchers("/api/auth/login", "/api/registration").permitAll()
+                .anyRequest().hasAnyRole("USER", "ADMIN")
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .and()
+                .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
