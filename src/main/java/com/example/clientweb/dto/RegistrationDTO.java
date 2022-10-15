@@ -33,4 +33,15 @@ public class RegistrationDTO {
 
     public RegistrationDTO() {
     }
+
+    @Override
+    public String toString() {
+        return "RegistrationDTO{" +
+                "password='" + password + '\'' +
+                ", username='" + username + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }
