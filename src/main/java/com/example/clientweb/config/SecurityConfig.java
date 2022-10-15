@@ -1,5 +1,6 @@
 package com.example.clientweb.config;
 
+import com.example.clientweb.security.JwtFilter;
 import com.example.clientweb.service.ClientUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,16 +13,19 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final ClientUserDetailsService clientUserDetailsService;
+    private final JwtFilter jwtFilter;
 
     @Autowired
-    public SecurityConfig(ClientUserDetailsService clientUserDetailsService) {
+    public SecurityConfig(ClientUserDetailsService clientUserDetailsService, JwtFilter jwtFilter) {
         this.clientUserDetailsService = clientUserDetailsService;
+        this.jwtFilter = jwtFilter;
     }
 
     @Bean
@@ -41,14 +45,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/my", "/profile").hasRole("USER")
-                .antMatchers("/**").permitAll()
-                .and().formLogin()
-                .loginPage("/api/auth/login")
-                .and().logout().logoutUrl("/logout").deleteCookies("jwt-token")
-                .and().sessionManagement()
+                .antMatchers("/api/auth/login", "/api/registration").permitAll()
+                .anyRequest().hasAnyRole("USER", "ADMIN")
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .and()
+                .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
