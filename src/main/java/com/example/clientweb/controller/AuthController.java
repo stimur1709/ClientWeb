@@ -25,7 +25,6 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody AuthenticationDTO authenticationDTO) {
-        System.out.println(1);
         return new ResponseEntity<>(authService.jwtLogin(authenticationDTO), HttpStatus.OK);
     }
 }

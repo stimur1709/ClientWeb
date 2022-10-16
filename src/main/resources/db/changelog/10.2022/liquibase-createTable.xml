@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet id="1" author="stimur1709">
+        <createTable tableName="users">
+            <column autoIncrement="true" name="id" type="serial">
+                <constraints primaryKey="true" primaryKeyName="user_pkey"/>
+            </column>
+            <column name="password" type="varchar(255)"/>
+            <column name="reg_time" type="timestamp(0) without time zone">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="balance" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="firstname" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lastname" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="login_attempts" defaultValueNumeric="0" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="login_time" type="timestamp(0) without time zone">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="stimur1709">
+        <createTable tableName="user_contact">
+            <column autoIncrement="true" name="id" type="serial">
+                <constraints primaryKey="true" primaryKeyName="user_contact_pkey"/>
+            </column>
+            <column name="type" type="varchar(255)"/>
+            <column defaultValueNumeric="0" name="approved" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="code_trails" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code_time" type="timestamp(0) without time zone">
+                <constraints nullable="false"/>
+            </column>
+            <column name="contact" type="varchar(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="3" author="stimur1709">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_contact"
+                                 constraintName="fkigqfory4r46pqd0sl4csnwp72" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="users"/>
+    </changeSet>
+    <changeSet id="4" author="stimur1709">
+        <insert tableName="users">
+            <column name="password" value="$2a$10$f1/nHeAf6p8hfP1MCUOgf.1l1zgf5uL.voiUQGHd3QTpvO7B2ozLC"/>
+            <column name="reg_time" value="2022-10-16 20:00:00"/>
+            <column name="username" value="stimur"/>
+            <column name="firstname" value="Safin"/>
+            <column name="lastname" value="Timur"/>
+            <column name="login_time" value="2022-10-16 20:00:00"/>
+        </insert>
+        <insert tableName="user_contact">
+            <column name="user_id" value="1"/>
+            <column name="type" value="MAIL"/>
+            <column name="code" value="123 456"/>
+            <column name="contact" value="stimur1709@mail.ru"/>
+            <column name="code_time" value="2022-10-16 20:00:01"/>
+        </insert>
+        <insert tableName="users">
+            <column name="password" value="$2a$10$UfYnPyhNMcrqR5DVZw8RgOOICxyo22m2wgZJ7WasSuVOQ1k2MPzj6"/>
+            <column name="reg_time" value="2022-10-16 20:10:02"/>
+            <column name="username" value="DaniilRalf"/>
+            <column name="firstname" value="Tarasov"/>
+            <column name="lastname" value="Daniil"/>
+            <column name="login_time" value="2022-10-16 20:10:02"/>
+        </insert>
+        <insert tableName="user_contact">
+            <column name="user_id" value="2"/>
+            <column name="type" value="MAIL"/>
+            <column name="code" value="476 826"/>
+            <column name="contact" value="daniilralf@mail.ru"/>
+            <column name="code_time" value="2022-10-16 20:10:03"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
