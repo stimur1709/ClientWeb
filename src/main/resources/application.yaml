@@ -8,25 +8,15 @@ spring:
   jpa:
     database: POSTGRESQL
     show-sql: false
-
-  liquibase:
-    enabled: true
-    change-log: classpath:/db/changelog/db.changelog-master.xml
+    hibernate:
+      ddl-auto: create
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/web
+    url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: 2400024
     driver-class-name: org.postgresql.Driver
 
-  cache:
-    type: redis
-  redis:
-    url: redis://127.0.0.1:6379
-
-profile:
-  jwt:
-    key: t911ur00
-    expirationDay: 1
-  loginAttempts: 5
-  blockTimeMinUser: 5
+jwt:
+  key: t911ur00
+  expirationDay: 2
