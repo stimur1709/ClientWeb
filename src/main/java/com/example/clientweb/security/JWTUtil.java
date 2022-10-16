@@ -42,4 +42,14 @@ public class JWTUtil {
         DecodedJWT jwt = verifier.verify(token);
         return jwt.getClaim("username").asString();
     }
+
+    public long extractExpiration(String token) {
+        JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))
+                .withSubject("User details")
+                .withIssuer("safin")
+                .build();
+
+        DecodedJWT jwt = verifier.verify(token);
+        return jwt.getExpiresAt().getTime();
+    }
 }
