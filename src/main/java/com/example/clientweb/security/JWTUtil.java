@@ -14,10 +14,10 @@ import java.util.Date;
 @Component
 public class JWTUtil {
 
-    @Value("${profile.jwt.key}")
+    @Value("${jwt.key}")
     private String secret;
 
-    @Value("${profile.jwt.expirationDay}")
+    @Value("${jwt.expirationDay}")
     private long expirationDay;
 
     public String generateToken(String username) {
@@ -41,15 +41,5 @@ public class JWTUtil {
 
         DecodedJWT jwt = verifier.verify(token);
         return jwt.getClaim("username").asString();
-    }
-
-    public long extractExpiration(String token) {
-        JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))
-                .withSubject("User details")
-                .withIssuer("safin")
-                .build();
-
-        DecodedJWT jwt = verifier.verify(token);
-        return jwt.getExpiresAt().getTime();
     }
 }

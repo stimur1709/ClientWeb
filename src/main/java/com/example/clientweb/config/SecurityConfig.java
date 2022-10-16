@@ -1,8 +1,6 @@
 package com.example.clientweb.config;
 
-import com.example.clientweb.security.CustomLogoutSuccessHandler;
 import com.example.clientweb.security.JwtFilter;
-import com.example.clientweb.service.BlacklistService;
 import com.example.clientweb.service.ClientUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +14,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -24,13 +21,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final ClientUserDetailsService clientUserDetailsService;
     private final JwtFilter jwtFilter;
-    private final BlacklistService blacklistService;
 
     @Autowired
-    public SecurityConfig(ClientUserDetailsService clientUserDetailsService, JwtFilter jwtFilter, BlacklistService blacklistService) {
+    public SecurityConfig(ClientUserDetailsService clientUserDetailsService, JwtFilter jwtFilter) {
         this.clientUserDetailsService = clientUserDetailsService;
         this.jwtFilter = jwtFilter;
-        this.blacklistService = blacklistService;
     }
 
     @Bean
@@ -50,10 +45,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/test").hasRole("USER")
-                .antMatchers("/api/auth/login", "/api/registration", "/swagger-ui/*").permitAll()
+                .antMatchers("/api/auth/login", "/api/registration").permitAll()
+                .anyRequest().hasAnyRole("USER", "ADMIN")
                 .and()
-                .logout().logoutUrl("/api/logout").logoutSuccessHandler(logoutSuccessHandler())
+                .logout()
+                .logoutUrl("/logout")
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -65,10 +61,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
-    }
-
-    @Bean
-    public LogoutSuccessHandler logoutSuccessHandler() {
-        return new CustomLogoutSuccessHandler(blacklistService);
     }
 }
