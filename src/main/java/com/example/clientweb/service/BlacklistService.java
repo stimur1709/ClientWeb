@@ -4,6 +4,8 @@ import com.example.clientweb.repository.BlacklistRepository;
 import com.example.clientweb.security.JWTUtil;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class BlacklistService {
 
@@ -17,16 +19,16 @@ public class BlacklistService {
 
     public void add(String token) {
         String key = jwtUtil.validateTokenAndRetrieveClaim(token);
-        long exp = jwtUtil.extractExpiration(token);
-        blacklistRepository.add(key, exp);
+        Date now = new Date();
+        blacklistRepository.add(key, jwtUtil.extractExpiration(token) - now.getTime());
     }
 
-    public boolean findToken(String key){
-        return blacklistRepository.findToken(key).isEmpty();
+    public boolean findToken(String username) {
+        return blacklistRepository.findToken(username).isEmpty();
     }
 
-    public void delete(String token) {
-        blacklistRepository.delete(jwtUtil.validateTokenAndRetrieveClaim(token));
+    public void delete(String username) {
+        blacklistRepository.delete(username);
     }
 
 }
