@@ -4,6 +4,7 @@ import com.example.clientweb.dto.AuthenticationDTO;
 import com.example.clientweb.model.User;
 import com.example.clientweb.security.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +21,9 @@ public class AuthService {
     private final BlacklistService blacklistService;
     private final UserService userService;
 
+    @Value("${profile.loginAttempts}")
+    private String loginAttempts;
+
     @Autowired
     public AuthService(AuthenticationManager authenticationManager, JWTUtil jwtUtil,
                        BlacklistService blacklistService, UserService userService) {
@@ -30,9 +34,9 @@ public class AuthService {
     }
 
     public Map<String, String> jwtLogin(AuthenticationDTO authenticationDTO) {
-        Optional<User> user = userService.findUserByUsername(authenticationDTO.getUsername());
+        Optional<User> userOptional = userService.findUserByUsername(authenticationDTO.getUsername());
 
-        if (user.isEmpty())
+        if (userOptional.isEmpty())
             return Map.of("message", "Пользователь не существует или неверный пароль");
 
         if (!blacklistService.findToken(authenticationDTO.getUsername()))
@@ -44,6 +48,15 @@ public class AuthService {
 
             authenticationManager.authenticate(authenticationToken);
         } catch (BadCredentialsException e) {
+                User user = userOptional.get();
+                user.setLoginAttempts(user.getLoginAttempts() + 1);
+                userService.save(user);
+
+            if (user.getLoginAttempts() > 2)
+                return user.getLoginAttempts() >= 5
+                        ? Map.of("message", "Пользователь заблокирован")
+                        : Map.of("message", "Пользователь не существует или неверный пароль");
+
 
             return Map.of("message", "Пользователь не существует или неверный пароль");
         }

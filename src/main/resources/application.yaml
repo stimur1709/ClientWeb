@@ -27,3 +27,6 @@ spring:
 jwt:
   key: t911ur00
   expirationDay: 1
+
+profile:
+  loginAttempts: 5

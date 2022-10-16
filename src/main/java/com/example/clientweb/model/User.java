@@ -38,6 +38,9 @@ public class User {
     @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private String lastname;
 
+    @Column(columnDefinition = "SMALLINT NOT NULL DEFAULT 0")
+    private int loginAttempts;
+
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
     private List<UserContact> userContact;
