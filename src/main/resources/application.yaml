@@ -24,9 +24,9 @@ spring:
   redis:
     url: redis://127.0.0.1:6379
 
-jwt:
-  key: t911ur00
-  expirationDay: 1
-
 profile:
+  jwt:
+    key: t911ur00
+    expirationDay: 1
   loginAttempts: 5
+  blockTimeMinUser: 5
