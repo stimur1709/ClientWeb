@@ -15,16 +15,21 @@ public class AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
+    private final BlacklistService blacklistService;
 
     @Autowired
-    public AuthService(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
+    public AuthService(AuthenticationManager authenticationManager, JWTUtil jwtUtil, BlacklistService blacklistService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.blacklistService = blacklistService;
     }
 
     public Map<String, String> jwtLogin(AuthenticationDTO authenticationDTO) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(authenticationDTO.getUsername(), authenticationDTO.getPassword());
+
+        if (!blacklistService.findToken(authenticationDTO.getUsername()))
+            blacklistService.delete(authenticationDTO.getUsername());
 
         try {
             authenticationManager.authenticate(authenticationToken);
