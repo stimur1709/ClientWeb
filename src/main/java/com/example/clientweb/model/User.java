@@ -41,6 +41,10 @@ public class User {
     @Column(columnDefinition = "SMALLINT NOT NULL DEFAULT 0")
     private int loginAttempts;
 
+    @Column(columnDefinition = "DATE NOT NULL")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date loginTime;
+
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
     private List<UserContact> userContact;
@@ -52,6 +56,7 @@ public class User {
         this.firstname = firstname;
         this.lastname = lastname;
         this.regTime = new Date();
+        this.loginTime = new Date();
     }
 
     public User() {
