@@ -27,6 +27,9 @@
             <column name="lastname" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
+            <column name="login_attempts" defaultValueNumeric="0" type="smallint">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
     <changeSet id="2" author="stimur1709">
