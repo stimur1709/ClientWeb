@@ -39,7 +39,7 @@ public class UserContact {
     @Temporal(TemporalType.TIMESTAMP)
     private Date codeTime;
 
-    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
+    @Column(unique = true, columnDefinition = "VARCHAR(255) NOT NULL")
     private String contact;
 
     public UserContact(User user, ContactType type, String contact, String code) {

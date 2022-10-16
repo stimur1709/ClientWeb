@@ -29,11 +29,13 @@ public class User {
     @Column(columnDefinition = "INT NOT NULL DEFAULT 0")
     private int balance;
 
-    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
+    @Column(unique = true, columnDefinition = "VARCHAR(255) NOT NULL")
     private String username;
 
+    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private String firstname;
 
+    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private String lastname;
 
     @OneToMany(mappedBy = "user")
