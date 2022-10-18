@@ -13,16 +13,16 @@ import java.util.Optional;
 @Service
 public class ClientUserDetailsService implements UserDetailsService {
 
-    private final UserService userService;
+    private final UserProfileService userProfileService;
 
     @Autowired
-    public ClientUserDetailsService(UserService userService) {
-        this.userService = userService;
+    public ClientUserDetailsService(UserProfileService userProfileService) {
+        this.userProfileService = userProfileService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userService.findUserByUsername(username);
+        Optional<User> user = userProfileService.findUserByUsername(username);
 
         if (user.isPresent())
             return new ClientUserDetails(user.get());
