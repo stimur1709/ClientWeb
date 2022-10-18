@@ -81,6 +81,6 @@ public class AuthService {
             return Map.of("message", "Пользователь не существует или неверный пароль");
         }
 
-        return Map.of("token", jwtUtil.generateToken(authenticationDTO.getUsername()));
+        return Map.of("token", jwtUtil.generateToken(user));
     }
 }

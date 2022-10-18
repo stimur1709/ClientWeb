@@ -1,6 +1,7 @@
 package com.example.clientweb.controller;
 
 import com.example.clientweb.dto.RegistrationDTO;
+import com.example.clientweb.model.User;
 import com.example.clientweb.security.JWTUtil;
 import com.example.clientweb.service.UserRegistrationService;
 import com.example.clientweb.util.RegistrationValidator;
@@ -40,7 +41,7 @@ public class RegistrationController {
                     Objects.requireNonNull(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage())), HttpStatus.OK);
         }
 
-        registrationService.registrationUser(registrationDTO);
-        return new ResponseEntity<>(Map.of("jwt-token", jwtUtil.generateToken(registrationDTO.getUsername())), HttpStatus.OK);
+        User user = registrationService.registrationUser(registrationDTO);
+        return new ResponseEntity<>(Map.of("jwt-token", jwtUtil.generateToken(user)), HttpStatus.OK);
     }
 }

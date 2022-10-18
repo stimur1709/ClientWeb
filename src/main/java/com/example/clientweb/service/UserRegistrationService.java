@@ -24,12 +24,13 @@ public class UserRegistrationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void registrationUser(RegistrationDTO registrationDTO) {
+    public User registrationUser(RegistrationDTO registrationDTO) {
         User user = new User(passwordEncoder.encode(registrationDTO.getPassword()), registrationDTO.getUsername(),
                 registrationDTO.getFirstname(), registrationDTO.getLastname());
         UserContact contact = new UserContact(user, ContactType.MAIL, registrationDTO.getEmail(), generator.getSecretCode());
 
         userService.save(user);
         userContactService.save(contact);
+        return user;
     }
 }
