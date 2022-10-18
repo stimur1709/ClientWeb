@@ -49,6 +49,12 @@ public class User {
     @JsonManagedReference
     private List<UserContact> userContact;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user2Role",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    @JsonManagedReference
+    private List<UserRole> userRoles;
 
     public User(String password, String username, String firstname, String lastname) {
         this.password = password;
@@ -60,6 +66,5 @@ public class User {
     }
 
     public User() {
-
     }
 }

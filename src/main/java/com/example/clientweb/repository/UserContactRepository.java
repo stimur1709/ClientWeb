@@ -11,4 +11,8 @@ import java.util.Optional;
 public interface UserContactRepository extends JpaRepository<UserContact, Integer> {
 
     Optional<UserContact> findByContactAndType(String mail, ContactType type);
+
+    UserContact findByUser_UsernameAndType(String username, ContactType type);
+
+
 }

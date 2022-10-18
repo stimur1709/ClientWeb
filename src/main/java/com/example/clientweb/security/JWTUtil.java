@@ -5,11 +5,14 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.clientweb.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class JWTUtil {
@@ -20,13 +23,16 @@ public class JWTUtil {
     @Value("${profile.jwt.expirationDay}")
     private long expirationDay;
 
-    public String generateToken(String username) {
+    public String generateToken(User user) {
 
         Date expiration = Date.from(ZonedDateTime.now().plusDays(expirationDay).toInstant());
 
+        List<String> roles = user.getUserRoles().stream().map(userRole -> userRole.getRole().toString()).collect(Collectors.toList());
+
         return JWT.create()
                 .withSubject("User details")
-                .withClaim("username", username)
+                .withClaim("username", user.getUsername())
+                .withClaim("role", roles)
                 .withIssuedAt(new Date())
                 .withIssuer("safin")
                 .withExpiresAt(expiration)

@@ -16,12 +16,12 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class AuthService {
+public class UserAuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
     private final BlacklistService blacklistService;
-    private final UserService userService;
+    private final UserProfileService userProfileService;
     private final Generator generator;
 
     @Value("${profile.loginAttempts}")
@@ -32,17 +32,17 @@ public class AuthService {
 
 
     @Autowired
-    public AuthService(AuthenticationManager authenticationManager, JWTUtil jwtUtil,
-                       BlacklistService blacklistService, UserService userService, Generator generator) {
+    public UserAuthService(AuthenticationManager authenticationManager, JWTUtil jwtUtil,
+                           BlacklistService blacklistService, UserProfileService userProfileService, Generator generator) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.blacklistService = blacklistService;
-        this.userService = userService;
+        this.userProfileService = userProfileService;
         this.generator = generator;
     }
 
     public Map<String, String> jwtLogin(AuthenticationDTO authenticationDTO) {
-        Optional<User> userOptional = userService.findUserByUsername(authenticationDTO.getUsername());
+        Optional<User> userOptional = userProfileService.findUserByUsername(authenticationDTO.getUsername());
 
         if (userOptional.isEmpty())
             return Map.of("message", "Пользователь не существует или неверный пароль");
@@ -52,7 +52,7 @@ public class AuthService {
         long difTime = now.getTime() - user.getLoginTime().getTime();
 
         if (difTime > blockTimeMinUser * 60000) {
-            userService.updateLogin(user);
+            userProfileService.updateLogin(user);
         }
 
         if (user.getLoginAttempts() >= loginAttempts && difTime < blockTimeMinUser * 60000)
@@ -65,13 +65,13 @@ public class AuthService {
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(authenticationDTO.getUsername(), authenticationDTO.getPassword());
             authenticationManager.authenticate(authenticationToken);
-            userService.updateLogin(user);
+            userProfileService.updateLogin(user);
 
         } catch (BadCredentialsException e) {
-            userService.updateLogin(user, user.getLoginAttempts() + 1);
+            userProfileService.updateLogin(user, user.getLoginAttempts() + 1);
 
             if (user.getLoginAttempts() >= loginAttempts) {
-                userService.updateLogin(user, new Date());
+                userProfileService.updateLogin(user, new Date());
                 return Map.of("message", generator.generatorTextBlockContact(difTime));
             }
 
@@ -81,6 +81,6 @@ public class AuthService {
             return Map.of("message", "Пользователь не существует или неверный пароль");
         }
 
-        return Map.of("token", jwtUtil.generateToken(authenticationDTO.getUsername()));
+        return Map.of("token", jwtUtil.generateToken(user));
     }
 }

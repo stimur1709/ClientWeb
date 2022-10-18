@@ -97,4 +97,74 @@
             <column name="code_time" value="2022-10-16 20:10:03"/>
         </insert>
     </changeSet>
+    <changeSet id="5" author="stimur1709">
+        <createTable tableName="user_role">
+            <column autoIncrement="true" name="id" type="serial">
+                <constraints primaryKey="true" primaryKeyName="user_role_pkey"/>
+            </column>
+            <column name="role" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="6" author="stimur1709">
+        <createTable tableName="user2role">
+            <column name="user_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="7" author="stimur1709">
+        <addPrimaryKey tableName="user2role" columnNames="user_id, role_id" constraintName="user2role_pkey"/>
+    </changeSet>
+    <changeSet id="8" author="stimur1709">
+        <addForeignKeyConstraint baseTableName="user2role" baseColumnNames="user_id"
+                                 constraintName="fk8joa8tens71ol1st4fd9user"
+                                 referencedTableName="users" referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="9" author="stimur1709">
+        <addForeignKeyConstraint baseTableName="user2role" baseColumnNames="role_id"
+                                 constraintName="fk8joa8tens71ol1st4fd9role"
+                                 referencedTableName="user_role" referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="10" author="stimur1709">
+        <insert tableName="user_role">
+            <column name="role" value="ROLE_ADMIN"/>
+        </insert>
+        <insert tableName="user_role">
+            <column name="role" value="ROLE_USER"/>
+        </insert>
+        <insert tableName="user_role">
+            <column name="role" value="ROLE_MODERATOR"/>
+        </insert>
+    </changeSet>
+    <changeSet id="11" author="stimur1709">
+        <insert tableName="user2role">
+            <column name="user_id" value="1"/>
+            <column name="role_id" value="1"/>
+        </insert>
+        <insert tableName="user2role">
+            <column name="user_id" value="1"/>
+            <column name="role_id" value="2"/>
+        </insert>
+        <insert tableName="user2role">
+            <column name="user_id" value="1"/>
+            <column name="role_id" value="3"/>
+        </insert>
+        <insert tableName="user2role">
+            <column name="user_id" value="2"/>
+            <column name="role_id" value="1"/>
+        </insert>
+        <insert tableName="user2role">
+            <column name="user_id" value="2"/>
+            <column name="role_id" value="2"/>
+        </insert>
+        <insert tableName="user2role">
+            <column name="user_id" value="2"/>
+            <column name="role_id" value="3"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>
