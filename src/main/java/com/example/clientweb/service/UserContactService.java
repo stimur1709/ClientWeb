@@ -25,4 +25,8 @@ public class UserContactService {
     public Optional<UserContact> findByMail(String mail) {
         return userContactRepository.findByContactAndType(mail, ContactType.MAIL);
     }
+
+    public UserContact getByUsernameAndType(String username, ContactType type) {
+        return userContactRepository.findByUser_UsernameAndType(username, type);
+    }
 }

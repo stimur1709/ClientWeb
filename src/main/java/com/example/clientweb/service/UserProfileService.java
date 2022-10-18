@@ -2,7 +2,9 @@ package com.example.clientweb.service;
 
 import com.example.clientweb.dto.PasswordDTO;
 import com.example.clientweb.dto.UserDTO;
+import com.example.clientweb.model.ContactType;
 import com.example.clientweb.model.User;
+import com.example.clientweb.model.UserContact;
 import com.example.clientweb.repository.UserRepository;
 import com.example.clientweb.security.JWTUtil;
 import org.modelmapper.ModelMapper;
@@ -20,14 +22,16 @@ public class UserProfileService {
     private final ModelMapper modelMapper;
     private final JWTUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
+    private final UserContactService userContactService;
 
     @Autowired
-    public UserProfileService(UserRepository userRepository, ModelMapper modelMapper,
-                              JWTUtil jwtUtil, PasswordEncoder passwordEncoder) {
+    public UserProfileService(UserRepository userRepository, ModelMapper modelMapper, JWTUtil jwtUtil,
+                              PasswordEncoder passwordEncoder, UserContactService userContactService) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
+        this.userContactService = userContactService;
     }
 
     public void save(User user) {
@@ -64,11 +68,22 @@ public class UserProfileService {
     }
 
     public boolean changePassword(String token, PasswordDTO passwordDTO) {
-        Optional<User> user = userRepository.findByUsernameIgnoreCaseAndPassword(jwtUtil.validateTokenAndRetrieveClaim(token),
-                passwordEncoder.encode(passwordDTO.getPasswordOld()));
-        if (user.isPresent()) {
-            user.get().setPassword(passwordEncoder.encode(passwordDTO.getPasswordOld()));
-            save(user.get());
+        User user = userRepository.getByUsername(jwtUtil.validateTokenAndRetrieveClaim(token));
+
+        if (passwordEncoder.matches(passwordDTO.getPasswordOld(), user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(passwordDTO.getPasswordNew()));
+            save(user);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean changeMail(String token, String mail) {
+        String username = jwtUtil.validateTokenAndRetrieveClaim(token);
+        if (userContactService.findByMail(mail).isEmpty()) {
+            UserContact userContact = userContactService.getByUsernameAndType(username, ContactType.MAIL);
+            userContact.setContact(mail);
+            userContactService.save(userContact);
             return true;
         }
         return false;

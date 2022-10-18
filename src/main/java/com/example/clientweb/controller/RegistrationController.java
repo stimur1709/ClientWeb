@@ -9,11 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/registration")
@@ -36,9 +37,13 @@ public class RegistrationController {
                                                             BindingResult bindingResult) {
         registrationValidator.validate(registrationDTO, bindingResult);
 
+
         if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(Map.of("message",
-                    Objects.requireNonNull(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage())), HttpStatus.OK);
+            Map<String, String> response = new HashMap<>();
+
+            for (FieldError fieldError : bindingResult.getFieldErrors())
+                response.put(fieldError.getField(), fieldError.getDefaultMessage());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
         User user = registrationService.registrationUser(registrationDTO);

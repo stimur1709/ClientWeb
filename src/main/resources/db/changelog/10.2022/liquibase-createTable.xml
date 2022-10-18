@@ -132,13 +132,13 @@
     </changeSet>
     <changeSet id="10" author="stimur1709">
         <insert tableName="user_role">
-            <column name="role" value="ADMIN"/>
+            <column name="role" value="ROLE_ADMIN"/>
         </insert>
         <insert tableName="user_role">
-            <column name="role" value="USER"/>
+            <column name="role" value="ROLE_USER"/>
         </insert>
         <insert tableName="user_role">
-            <column name="role" value="MODERATOR"/>
+            <column name="role" value="ROLE_MODERATOR"/>
         </insert>
     </changeSet>
     <changeSet id="11" author="stimur1709">
