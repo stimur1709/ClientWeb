@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class JWTUtil {
@@ -27,12 +25,9 @@ public class JWTUtil {
 
         Date expiration = Date.from(ZonedDateTime.now().plusDays(expirationDay).toInstant());
 
-        List<String> roles = user.getUserRoles().stream().map(userRole -> userRole.getRole().toString()).collect(Collectors.toList());
-
         return JWT.create()
                 .withSubject("User details")
                 .withClaim("username", user.getUsername())
-                .withClaim("role", roles)
                 .withIssuedAt(new Date())
                 .withIssuer("safin")
                 .withExpiresAt(expiration)

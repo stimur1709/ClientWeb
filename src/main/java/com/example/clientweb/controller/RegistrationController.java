@@ -2,6 +2,7 @@ package com.example.clientweb.controller;
 
 import com.example.clientweb.dto.RegistrationDTO;
 import com.example.clientweb.model.User;
+import com.example.clientweb.model.UserRole;
 import com.example.clientweb.security.JWTUtil;
 import com.example.clientweb.service.UserRegistrationService;
 import com.example.clientweb.util.RegistrationValidator;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/registration")
@@ -33,13 +36,13 @@ public class RegistrationController {
     }
 
     @PostMapping()
-    public ResponseEntity<Map<String, String>> registration(@RequestBody @Valid RegistrationDTO registrationDTO,
+    public ResponseEntity<Map<String, Object>> registration(@RequestBody @Valid RegistrationDTO registrationDTO,
                                                             BindingResult bindingResult) {
         registrationValidator.validate(registrationDTO, bindingResult);
 
 
         if (bindingResult.hasErrors()) {
-            Map<String, String> response = new HashMap<>();
+            Map<String, Object> response = new HashMap<>();
 
             for (FieldError fieldError : bindingResult.getFieldErrors())
                 response.put(fieldError.getField(), fieldError.getDefaultMessage());
@@ -47,6 +50,7 @@ public class RegistrationController {
         }
 
         User user = registrationService.registrationUser(registrationDTO);
-        return new ResponseEntity<>(Map.of("jwt-token", jwtUtil.generateToken(user)), HttpStatus.OK);
+        List<String> roles= user.getUserRoles().stream().map(UserRole::getRole).map(Enum::toString).collect(Collectors.toList());
+        return new ResponseEntity<>(Map.of("jwt-token", jwtUtil.generateToken(user), "role", roles), HttpStatus.OK);
     }
 }

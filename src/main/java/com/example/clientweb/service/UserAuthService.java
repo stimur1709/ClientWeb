@@ -2,6 +2,7 @@ package com.example.clientweb.service;
 
 import com.example.clientweb.dto.AuthenticationDTO;
 import com.example.clientweb.model.User;
+import com.example.clientweb.model.UserRole;
 import com.example.clientweb.security.JWTUtil;
 import com.example.clientweb.util.Generator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserAuthService {
@@ -41,9 +41,8 @@ public class UserAuthService {
         this.generator = generator;
     }
 
-    public Map<String, String> jwtLogin(AuthenticationDTO authenticationDTO) {
+    public Map<String, Object> jwtLogin(AuthenticationDTO authenticationDTO) {
         Optional<User> userOptional = userProfileService.findUserByUsername(authenticationDTO.getUsername());
-
         if (userOptional.isEmpty())
             return Map.of("message", "Пользователь не существует или неверный пароль");
 
@@ -80,7 +79,8 @@ public class UserAuthService {
 
             return Map.of("message", "Пользователь не существует или неверный пароль");
         }
+        List<String> roles= user.getUserRoles().stream().map(UserRole::getRole).map(Enum::toString).collect(Collectors.toList());
 
-        return Map.of("token", jwtUtil.generateToken(user));
+        return Map.of("token", jwtUtil.generateToken(user), "role", roles);
     }
 }
