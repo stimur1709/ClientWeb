@@ -44,7 +44,7 @@ public class UserAuthService {
     public Map<String, Object> jwtLogin(AuthenticationDTO authenticationDTO) {
         Optional<User> userOptional = userProfileService.findUserByUsername(authenticationDTO.getUsername());
         if (userOptional.isEmpty())
-            return Map.of("message", "Пользователь не существует или неверный пароль");
+            return getErrorResponse("Пользователь не существует или неверный пароль");
 
         User user = userOptional.get();
         Date now = new Date();
@@ -55,7 +55,7 @@ public class UserAuthService {
         }
 
         if (user.getLoginAttempts() >= loginAttempts && difTime < blockTimeMinUser * 60000)
-            return Map.of("message", generator.generatorTextBlockContact(difTime));
+            return getErrorResponse(generator.generatorTextBlockContact(difTime));
 
         if (!blacklistService.findToken(authenticationDTO.getUsername()))
             blacklistService.delete(authenticationDTO.getUsername());
@@ -71,16 +71,24 @@ public class UserAuthService {
 
             if (user.getLoginAttempts() >= loginAttempts) {
                 userProfileService.updateLogin(user, new Date());
-                return Map.of("message", generator.generatorTextBlockContact(difTime));
+                return getErrorResponse(generator.generatorTextBlockContact(difTime));
             }
 
             if (user.getLoginAttempts() > 2)
-                return Map.of("message", generator.generatorTextBadContact(loginAttempts - user.getLoginAttempts()));
+                return getErrorResponse(generator.generatorTextBadContact(loginAttempts - user.getLoginAttempts()));
 
-            return Map.of("message", "Пользователь не существует или неверный пароль");
+            return getErrorResponse("Пользователь не существует или неверный пароль");
+
         }
-        List<String> roles= user.getUserRoles().stream().map(UserRole::getRole).map(Enum::toString).collect(Collectors.toList());
+        List<String> roles = user.getUserRoles().stream().map(UserRole::getRole).map(Enum::toString).collect(Collectors.toList());
 
-        return Map.of("token", jwtUtil.generateToken(user), "role", roles);
+        return Map.of("result", true, "token", jwtUtil.generateToken(user), "role", roles);
+    }
+
+    private Map<String, Object> getErrorResponse(String text) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("result", false);
+        response.put("message", text);
+        return response;
     }
 }
