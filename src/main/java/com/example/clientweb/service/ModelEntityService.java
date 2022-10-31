@@ -15,7 +15,4 @@ public interface ModelEntityService<E extends ModelEntity, D extends ModelDto> {
     Optional<E> findById(Integer id);
 
     void save(E entity);
-
-    E save(D dto);
-
 }
