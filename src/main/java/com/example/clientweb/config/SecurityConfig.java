@@ -2,8 +2,8 @@ package com.example.clientweb.config;
 
 import com.example.clientweb.security.CustomLogoutSuccessHandler;
 import com.example.clientweb.security.JwtFilter;
-import com.example.clientweb.service.BlacklistService;
-import com.example.clientweb.service.ClientUserDetailsService;
+import com.example.clientweb.service.userService.BlacklistService;
+import com.example.clientweb.service.userService.ClientUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/profile/**").hasAnyRole("ADMIN", "USER", "MODERATOR")
-                .antMatchers("/api/auth/login", "/api/registration", "/swagger-ui/*").permitAll()
+                .antMatchers("/api/**", "/api/auth/login", "/api/registration", "/swagger-ui/*").permitAll()
                 .and()
                 .logout().logoutUrl("/api/logout").logoutSuccessHandler(logoutSuccessHandler())
                 .and()

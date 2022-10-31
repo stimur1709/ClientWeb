@@ -1,8 +1,8 @@
 package com.example.clientweb.security;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.example.clientweb.service.BlacklistService;
-import com.example.clientweb.service.ClientUserDetailsService;
+import com.example.clientweb.service.userService.BlacklistService;
+import com.example.clientweb.service.userService.ClientUserDetailsService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
