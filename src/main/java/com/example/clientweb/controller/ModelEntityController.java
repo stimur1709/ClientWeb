@@ -15,7 +15,7 @@ import javax.validation.Valid;
 public interface ModelEntityController<E extends ModelEntity, D extends ModelDto> {
 
     @PostMapping("/save")
-    ResponseEntity<E> save(@RequestBody @Valid D dto, BindingResult bindingResult);
+    ResponseEntity<E> save(@RequestBody @Valid E dto, BindingResult bindingResult);
 
     @GetMapping
     Page<E> getPage(@RequestParam("offset") int offset, @RequestParam("limit") int limit,

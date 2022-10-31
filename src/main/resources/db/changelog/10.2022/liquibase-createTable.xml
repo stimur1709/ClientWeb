@@ -9,7 +9,7 @@
                 <constraints primaryKey="true" primaryKeyName="user_pkey"/>
             </column>
             <column name="password" type="varchar(255)"/>
-            <column name="reg_time" type="timestamp(0) without time zone">
+            <column name="reg_time" type="TIMESTAMP(0)">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="0" name="balance" type="int">
@@ -171,10 +171,10 @@
             </column>
             <column name="description" type="TEXT"/>
             <column name="image" type="VARCHAR(255)"/>
-            <column name="created_date" type="timestamp(0) without time zone">
+            <column name="created_date" type="TIMESTAMP(0) WITHOUT TIME ZONE">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_date" type="timestamp(0) without time zone">
+            <column name="updated_date" type="TIMESTAMP(0) WITHOUT TIME ZONE">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="0" name="duration" type="int">
@@ -198,10 +198,10 @@
             </column>
             <column name="description" type="TEXT"/>
             <column name="image" type="VARCHAR(255)"/>
-            <column name="created_date" type="timestamp(0) without time zone">
+            <column name="created_date" type="TIMESTAMP(0) WITHOUT TIME ZONE">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_date" type="timestamp(0) without time zone">
+            <column name="updated_date" type="TIMESTAMP(0) WITHOUT TIME ZONE">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="0" name="duration" type="int">

@@ -18,8 +18,9 @@ public abstract class ModelEntityControllerImpl<E extends ModelEntity, D extends
     }
 
     @Override
-    public ResponseEntity<E> save(D dto, BindingResult bindingResult) {
-        return new ResponseEntity<>(service.save(dto), HttpStatus.OK);
+    public ResponseEntity<E> save(E dto, BindingResult bindingResult) {
+        service.save(dto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.example.clientweb.controller;
+package com.example.clientweb.controller.userController;
 
 import com.example.clientweb.dto.RegistrationDto;
 import com.example.clientweb.service.userService.UserRegistrationService;

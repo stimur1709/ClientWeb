@@ -28,12 +28,12 @@ public class Education extends ModelEntity {
 
     private int duration;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "created_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_date", columnDefinition = "DATE NOT NULL")
     private Date createdDate;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "updated_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updated_date", columnDefinition = "DATE NOT NULL")
     private Date updatedDate;
 
 }
