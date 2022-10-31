@@ -1,7 +1,7 @@
 package com.example.clientweb.controller;
 
-import com.example.clientweb.dto.RegistrationDTO;
-import com.example.clientweb.service.UserRegistrationService;
+import com.example.clientweb.dto.RegistrationDto;
+import com.example.clientweb.service.userService.UserRegistrationService;
 import com.example.clientweb.util.BindingResultResponse;
 import com.example.clientweb.util.RegistrationValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class RegistrationController {
     }
 
     @PostMapping()
-    public ResponseEntity<Map<String, Object>> registration(@RequestBody @Valid RegistrationDTO registrationDTO,
+    public ResponseEntity<Map<String, Object>> registration(@RequestBody @Valid RegistrationDto registrationDTO,
                                                             BindingResult bindingResult) {
         registrationValidator.validate(registrationDTO, bindingResult);
 

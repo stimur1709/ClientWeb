@@ -1,7 +1,7 @@
 package com.example.clientweb.controller;
 
-import com.example.clientweb.dto.AuthenticationDTO;
-import com.example.clientweb.service.UserAuthService;
+import com.example.clientweb.dto.AuthenticationDto;
+import com.example.clientweb.service.userService.UserAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody AuthenticationDTO authenticationDTO) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody AuthenticationDto authenticationDTO) {
         return new ResponseEntity<>(userAuthService.jwtLogin(authenticationDTO), HttpStatus.OK);
     }
 }

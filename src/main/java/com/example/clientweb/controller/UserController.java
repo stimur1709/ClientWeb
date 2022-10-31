@@ -1,8 +1,8 @@
 package com.example.clientweb.controller;
 
-import com.example.clientweb.dto.PasswordDTO;
-import com.example.clientweb.dto.UserDTO;
-import com.example.clientweb.service.UserProfileService;
+import com.example.clientweb.dto.PasswordDto;
+import com.example.clientweb.dto.UserDto;
+import com.example.clientweb.service.userService.UserService;
 import com.example.clientweb.util.BindingResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,36 +19,36 @@ import java.util.Map;
 @RequestMapping("/api/profile")
 public class UserController {
 
-    private final UserProfileService userProfileService;
+    private final UserService userService;
     private final BindingResultResponse bindingResultResponse;
 
     @Autowired
-    public UserController(UserProfileService userProfileService, BindingResultResponse bindingResultResponse) {
-        this.userProfileService = userProfileService;
+    public UserController(UserService userService, BindingResultResponse bindingResultResponse) {
+        this.userService = userService;
         this.bindingResultResponse = bindingResultResponse;
     }
 
     @GetMapping
-    public ResponseEntity<UserDTO> getUserProfile(HttpServletRequest request) {
+    public ResponseEntity<UserDto> getUserProfile(HttpServletRequest request) {
         String token = request.getHeader("Authorization").substring(7);
-        return new ResponseEntity<>(userProfileService.getUserDTO(token), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getUserDTO(token), HttpStatus.OK);
     }
 
     @PostMapping("/change/password")
     @Operation(summary = "Смена пароля",
             description = "Запрос на смену пароля у пользователя.")
-    public ResponseEntity<Map<String, ?>> changePassword(@RequestBody @Valid PasswordDTO passwordDTO, BindingResult bindingResult,
+    public ResponseEntity<Map<String, ?>> changePassword(@RequestBody @Valid PasswordDto passwordDTO, BindingResult bindingResult,
                                                          HttpServletRequest request) {
         if (bindingResult.hasErrors())
             return new ResponseEntity<>(bindingResultResponse.getMessage(bindingResult), HttpStatus.OK);
 
         String token = request.getHeader("Authorization").substring(7);
-        return new ResponseEntity<>(Map.of("result", userProfileService.changePassword(token, passwordDTO)), HttpStatus.OK);
+        return new ResponseEntity<Map<String, ?>>(Map.of("result", userService.changePassword(token, passwordDTO)), HttpStatus.OK);
     }
 
     @PostMapping("/change/mail")
     public ResponseEntity<Map<String, ?>> changeMail(HttpServletRequest request, @RequestParam("mail") String mail) {
         String token = request.getHeader("Authorization").substring(7);
-        return new ResponseEntity<>(Map.of("result", userProfileService.changeMail(token, mail)), HttpStatus.OK);
+        return new ResponseEntity<Map<String, ?>>(Map.of("result", userService.changeMail(token, mail)), HttpStatus.OK);
     }
 }
