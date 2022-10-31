@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class UserDto {
+public class UserDto extends ModelDto{
 
     private String username;
 
@@ -15,6 +15,6 @@ public class UserDto {
 
     private String lastname;
 
-    private List<UsesContactDto> userContact;
+    private List<UserContactDto> userContact;
 
 }

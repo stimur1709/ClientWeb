@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/profile/**").hasAnyRole("ADMIN", "USER", "MODERATOR")
-                .antMatchers("/api/auth/login", "/api/registration", "/swagger-ui/*").permitAll()
+                .antMatchers("/api/**", "/api/auth/login", "/api/registration", "/swagger-ui/*").permitAll()
                 .and()
                 .logout().logoutUrl("/api/logout").logoutSuccessHandler(logoutSuccessHandler())
                 .and()

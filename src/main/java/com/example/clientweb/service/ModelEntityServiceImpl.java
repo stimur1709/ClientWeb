@@ -3,22 +3,18 @@ package com.example.clientweb.service;
 import com.example.clientweb.dto.ModelDto;
 import com.example.clientweb.model.ModelEntity;
 import com.example.clientweb.repository.ModelEntityRepository;
-import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.spi.MappingContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public abstract class ModelEntityServiceImpl<E extends ModelEntity, D extends ModelDto, R extends ModelEntityRepository<E>>
         implements ModelEntityService<E, D> {
-
     protected final R repository;
+
     private ModelMapper modelMapper;
     private Class<E> modelEntity;
     private Class<D> modelDTO;

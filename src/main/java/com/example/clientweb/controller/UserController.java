@@ -43,12 +43,12 @@ public class UserController {
             return new ResponseEntity<>(bindingResultResponse.getMessage(bindingResult), HttpStatus.OK);
 
         String token = request.getHeader("Authorization").substring(7);
-        return new ResponseEntity<Map<String, ?>>(Map.of("result", userService.changePassword(token, passwordDTO)), HttpStatus.OK);
+        return new ResponseEntity<>(Map.of("result", userService.changePassword(token, passwordDTO)), HttpStatus.OK);
     }
 
-    @PostMapping("/change/mail")
-    public ResponseEntity<Map<String, ?>> changeMail(HttpServletRequest request, @RequestParam("mail") String mail) {
+    @PostMapping("/change")
+    public ResponseEntity<Map<String, ?>> changeMail(HttpServletRequest request, @RequestBody String mail) {
         String token = request.getHeader("Authorization").substring(7);
-        return new ResponseEntity<Map<String, ?>>(Map.of("result", userService.changeMail(token, mail)), HttpStatus.OK);
+        return new ResponseEntity<>(Map.of("result", userService.changeMail(token, mail)), HttpStatus.OK);
     }
 }

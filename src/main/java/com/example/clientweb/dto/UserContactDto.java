@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UsesContactDto {
+public class UserContactDto extends ModelDto{
 
     private ContactType type;
 

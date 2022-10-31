@@ -1,5 +1,6 @@
 package com.example.clientweb.service.userService;
 
+import com.example.clientweb.dto.UserContactDto;
 import com.example.clientweb.model.user.ContactType;
 import com.example.clientweb.model.user.UserContact;
 import com.example.clientweb.repository.userRepository.UserContactRepository;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class UserContactService extends ModelEntityServiceImpl<UserContact, UserContactRepository> {
+public class UserContactService extends ModelEntityServiceImpl<UserContact, UserContactDto, UserContactRepository> {
 
     private final UserContactRepository userContactRepository;
 

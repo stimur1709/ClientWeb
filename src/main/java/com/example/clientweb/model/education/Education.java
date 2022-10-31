@@ -6,17 +6,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import java.util.Date;
 
-@Entity
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
+@MappedSuperclass
 public class Education extends ModelEntity {
 
     private String title;
@@ -31,11 +28,11 @@ public class Education extends ModelEntity {
 
     private int duration;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     @Column(name = "created_date")
     private Date createdDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     @Column(name = "updated_date")
     private Date updatedDate;
 

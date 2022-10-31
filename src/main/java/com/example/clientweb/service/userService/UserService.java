@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class UserService extends ModelEntityServiceImpl<User, UserRepository> {
+public class UserService extends ModelEntityServiceImpl<User, UserDto, UserRepository> {
 
     private final UserRepository userRepository;
     private final JWTUtil jwtUtil;

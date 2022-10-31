@@ -13,6 +13,6 @@ import javax.persistence.Table;
 @Setter
 @ToString
 @RequiredArgsConstructor
-@Table
+@Table(name = "course")
 public class Course extends Education {
 }
