@@ -1,6 +1,6 @@
 package com.example.clientweb.model.user;
 
-import com.example.clientweb.model.ModelEntity;
+import com.example.clientweb.model.Entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -12,10 +12,10 @@ import java.util.List;
 
 @Getter
 @Setter
-@Entity
+@javax.persistence.Entity
 @Table(name = "users")
 @Schema(description = "Сущность пользователя")
-public class User extends ModelEntity {
+public class User extends Entity {
 
     private String password;
 

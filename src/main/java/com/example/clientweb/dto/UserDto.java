@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class UserDto extends ModelDto{
+public class UserDto extends Dto {
 
     private String username;
 

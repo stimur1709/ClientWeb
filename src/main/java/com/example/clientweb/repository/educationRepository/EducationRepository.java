@@ -1,7 +1,7 @@
 package com.example.clientweb.repository.educationRepository;
 
 import com.example.clientweb.model.education.Education;
-import com.example.clientweb.repository.ModelEntityRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface EducationRepository<E extends Education> extends ModelEntityRepository<E> {
+public interface EducationRepository<E extends Education> extends JpaRepository<E, Integer> {
 }

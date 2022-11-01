@@ -1,6 +1,6 @@
 package com.example.clientweb.model.education;
 
-import com.example.clientweb.model.ModelEntity;
+import com.example.clientweb.model.Entity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -14,7 +14,7 @@ import java.util.Date;
 @ToString
 @RequiredArgsConstructor
 @MappedSuperclass
-public class Education extends ModelEntity {
+public class Education extends Entity {
 
     private String title;
 

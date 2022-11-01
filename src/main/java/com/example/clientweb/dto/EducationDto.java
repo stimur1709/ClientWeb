@@ -5,11 +5,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class EducationDto extends ModelDto {
+public class EducationDto extends Dto {
 
     private String title;
 
@@ -22,4 +24,9 @@ public class EducationDto extends ModelDto {
     private double popularity;
 
     private int duration;
+
+    private Date updatedDate;
+
+    private Date createdDate;
+
 }
