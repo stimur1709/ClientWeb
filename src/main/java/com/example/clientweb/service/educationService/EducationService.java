@@ -1,19 +1,16 @@
 package com.example.clientweb.service.educationService;
 
 import com.example.clientweb.dto.Dto;
-import com.example.clientweb.model.Entity;
 import org.springframework.data.domain.Page;
 
-import java.util.Optional;
+public interface EducationService<D extends Dto> {
 
-public interface EducationService<E extends Entity, D extends Dto> {
+    Page<D> findAll(int offset, int limit);
 
-    Page<E> findAll(int offset, int limit);
+    Page<D> findAll(int offset, int limit, boolean reverse, String sort);
 
-    Page<E> findAll(int offset, int limit, boolean reverse, String sort);
+    D findById(Integer id);
 
-    Optional<E> findById(Integer id);
-
-    void save(D dto);
+    boolean save(D dto);
 
 }
