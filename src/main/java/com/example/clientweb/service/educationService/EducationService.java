@@ -1,23 +1,19 @@
 package com.example.clientweb.service.educationService;
 
-import com.example.clientweb.dto.EducationDto;
-import com.example.clientweb.model.education.Education;
-import com.example.clientweb.repository.educationRepository.EducationRepository;
-import com.example.clientweb.service.ModelEntityServiceImpl;
+import com.example.clientweb.dto.Dto;
+import com.example.clientweb.model.Entity;
+import org.springframework.data.domain.Page;
 
-import java.util.Date;
+import java.util.Optional;
 
-public abstract class EducationService<E extends Education, D extends EducationDto, R extends EducationRepository<E>>
-        extends ModelEntityServiceImpl<E, D, R> {
+public interface EducationService<E extends Entity, D extends Dto> {
 
-    public EducationService(R repository) {
-        super(repository);
-    }
+    Page<E> findAll(int offset, int limit);
 
-    @Override
-    public void save(E entity) {
-        entity.setCreatedDate(new Date());
-        entity.setUpdatedDate(new Date());
-        super.save(entity);
-    }
+    Page<E> findAll(int offset, int limit, boolean reverse, String sort);
+
+    Optional<E> findById(Integer id);
+
+    void save(D dto);
+
 }

@@ -7,7 +7,6 @@ import com.example.clientweb.model.user.User;
 import com.example.clientweb.model.user.UserContact;
 import com.example.clientweb.repository.userRepository.UserRepository;
 import com.example.clientweb.security.JWTUtil;
-import com.example.clientweb.service.ModelEntityServiceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class UserService extends ModelEntityServiceImpl<User, UserDto, UserRepository> {
+public class UserService {
 
     private final UserRepository userRepository;
     private final JWTUtil jwtUtil;
@@ -26,7 +25,6 @@ public class UserService extends ModelEntityServiceImpl<User, UserDto, UserRepos
     @Autowired
     public UserService(UserRepository userRepository, JWTUtil jwtUtil, PasswordEncoder passwordEncoder,
                        UserContactService userContactService, ModelMapper modelMapper) {
-        super(userRepository);
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
@@ -71,5 +69,9 @@ public class UserService extends ModelEntityServiceImpl<User, UserDto, UserRepos
 
     private UserDto convertToUserDTO(User user) {
         return modelMapper.map(user, UserDto.class);
+    }
+
+    public void save(User user) {
+        userRepository.save(user);
     }
 }

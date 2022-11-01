@@ -1,6 +1,5 @@
 package com.example.clientweb.controller.educationController;
 
-import com.example.clientweb.controller.ModelEntityControllerImpl;
 import com.example.clientweb.dto.EducationDto;
 import com.example.clientweb.model.education.Course;
 import com.example.clientweb.service.educationService.CourseService;

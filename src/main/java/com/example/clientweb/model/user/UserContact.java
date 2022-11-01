@@ -1,6 +1,6 @@
 package com.example.clientweb.model.user;
 
-import com.example.clientweb.model.ModelEntity;
+import com.example.clientweb.model.Entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -11,10 +11,10 @@ import java.util.Date;
 
 @Getter
 @Setter
-@Entity
+@javax.persistence.Entity
 @Table(name = "user_contact")
 @Schema(description = "Сущность контакта пользователя")
-public class UserContact extends ModelEntity {
+public class UserContact extends Entity {
 
     @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "user_id", columnDefinition = "INT")

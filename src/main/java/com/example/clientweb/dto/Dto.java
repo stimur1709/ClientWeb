@@ -5,5 +5,5 @@ import org.springframework.stereotype.Component;
 
 @ToString
 @Component
-public class ModelDto {
+public class Dto {
 }

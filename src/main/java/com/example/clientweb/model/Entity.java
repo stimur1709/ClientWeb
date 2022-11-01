@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class ModelEntity {
+public class Entity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

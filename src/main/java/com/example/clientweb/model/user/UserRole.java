@@ -1,6 +1,6 @@
 package com.example.clientweb.model.user;
 
-import com.example.clientweb.model.ModelEntity;
+import com.example.clientweb.model.Entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,9 +10,9 @@ import java.util.List;
 
 @Getter
 @Setter
-@Entity
+@javax.persistence.Entity
 @Table(name = "user_role")
-public class UserRole extends ModelEntity {
+public class UserRole extends Entity {
 
     @Enumerated(EnumType.STRING)
     private Role role;
