@@ -7,11 +7,14 @@ import com.example.clientweb.security.JWTUtil;
 import com.example.clientweb.util.Generator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.LocaleResolver;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,6 +26,9 @@ public class UserAuthService {
     private final JWTUtil jwtUtil;
     private final BlacklistService blacklistService;
     private final Generator generator;
+    private final MessageSource messageSource;
+    private final LocaleResolver localeResolver;
+    private final HttpServletRequest request;
 
     @Value("${profile.loginAttempts}")
     private int loginAttempts;
@@ -32,18 +38,23 @@ public class UserAuthService {
 
     @Autowired
     public UserAuthService(UserService userService, AuthenticationManager authenticationManager, JWTUtil jwtUtil,
-                           BlacklistService blacklistService, Generator generator) {
+                           BlacklistService blacklistService, Generator generator, MessageSource messageSource,
+                           LocaleResolver localeResolver, HttpServletRequest request) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.blacklistService = blacklistService;
         this.generator = generator;
+        this.messageSource = messageSource;
+        this.localeResolver = localeResolver;
+        this.request = request;
     }
 
     public Map<String, Object> jwtLogin(AuthenticationDto authenticationDTO) {
         Optional<User> userOptional = userService.findUserByUsername(authenticationDTO.getUsername());
+        String userNotFound = messageSource.getMessage("message.userNotFound", null, localeResolver.resolveLocale(request));
         if (userOptional.isEmpty())
-            return getErrorResponse("Пользователь не существует или неверный пароль");
+            return getErrorResponse(userNotFound);
 
         User user = userOptional.get();
         Date now = new Date();
@@ -77,7 +88,7 @@ public class UserAuthService {
             if (user.getLoginAttempts() > 2)
                 return getErrorResponse(generator.generatorTextBadContact(loginAttempts - user.getLoginAttempts()));
 
-            return getErrorResponse("Пользователь не существует или неверный пароль");
+            return getErrorResponse(userNotFound);
 
         }
 

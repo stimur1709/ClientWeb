@@ -11,24 +11,20 @@ import javax.validation.constraints.Size;
 @Setter
 public class RegistrationDto {
 
-    @NotEmpty(message = "Пароль не должен быть пустым")
-    @Size(min = 5, max = 100, message = "Пароль должен быть от 5 до 100 символов длиной")
+    @Size(min = 5, max = 100, message = "{message.password}")
     private String password;
 
-    @NotEmpty(message = "Логин не должен быть пустым")
-    @Size(min = 2, max = 100, message = "Логин должен быть от 2 до 100 символов длиной")
+    @Size(min = 2, max = 100, message = "{message.username}")
     private String username;
 
-    @NotEmpty(message = "Фамилия не должна быть пустым")
-    @Size(min = 2, max = 100, message = "Фамилия должна быть от 2 до 100 символов длиной")
+    @Size(min = 2, max = 100, message = "{message.firstname}")
     private String firstname;
 
-    @NotEmpty(message = "Имя не должно быть пустым")
-    @Size(min = 2, max = 100, message = "Имя должно быть от 2 до 100 символов длиной")
+    @Size(min = 2, max = 100, message = "{message.lastname}")
     private String lastname;
 
-    @NotEmpty(message = "Email не должен быть пустым")
-    @Email(message = "Email должен быть в формате *****@***.**")
+    @NotEmpty(message = "{message.validMail}")
+    @Email(message = "{message.validMail}")
     private String email;
 
     public RegistrationDto() {
