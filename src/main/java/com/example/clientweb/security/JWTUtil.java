@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.clientweb.model.user.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -14,19 +15,19 @@ import java.util.Date;
 @Component
 public class JWTUtil {
 
-    @Value("${jwt.key}")
+    @Value("${profile.jwt.key}")
     private String secret;
 
-    @Value("${jwt.expirationDay}")
+    @Value("${profile.jwt.expirationDay}")
     private long expirationDay;
 
-    public String generateToken(String username) {
+    public String generateToken(User user) {
 
         Date expiration = Date.from(ZonedDateTime.now().plusDays(expirationDay).toInstant());
 
         return JWT.create()
                 .withSubject("User details")
-                .withClaim("username", username)
+                .withClaim("username", user.getUsername())
                 .withIssuedAt(new Date())
                 .withIssuer("safin")
                 .withExpiresAt(expiration)
@@ -41,5 +42,15 @@ public class JWTUtil {
 
         DecodedJWT jwt = verifier.verify(token);
         return jwt.getClaim("username").asString();
+    }
+
+    public long extractExpiration(String token) {
+        JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))
+                .withSubject("User details")
+                .withIssuer("safin")
+                .build();
+
+        DecodedJWT jwt = verifier.verify(token);
+        return jwt.getExpiresAt().getTime();
     }
 }
