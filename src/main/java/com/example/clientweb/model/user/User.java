@@ -26,21 +26,12 @@ public class User extends Entity {
     @Column(columnDefinition = "INT NOT NULL DEFAULT 0")
     private int balance;
 
-    @Column(unique = true, columnDefinition = "VARCHAR(255) NOT NULL")
+    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private String username;
 
-    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private String firstname;
 
-    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private String lastname;
-
-    @Column(columnDefinition = "SMALLINT NOT NULL DEFAULT 0")
-    private int loginAttempts;
-
-    @Column(columnDefinition = "DATE NOT NULL")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date loginTime;
 
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
@@ -59,7 +50,6 @@ public class User extends Entity {
         this.firstname = firstname;
         this.lastname = lastname;
         this.regTime = new Date();
-        this.loginTime = new Date();
     }
 
     public User() {

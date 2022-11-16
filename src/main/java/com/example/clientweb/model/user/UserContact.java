@@ -36,7 +36,7 @@ public class UserContact extends Entity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date codeTime;
 
-    @Column(unique = true, columnDefinition = "VARCHAR(255) NOT NULL")
+    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private String contact;
 
     public UserContact(User user, ContactType type, String contact, String code) {

@@ -17,6 +17,11 @@ public class ClientWebApplication {
     }
 
     @Bean
+    public ModelMapper getModelMapper() {
+        return new ModelMapper();
+    }
+
+    @Bean
     public Random getRandom() {
         return new Random();
     }
