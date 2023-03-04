@@ -1,7 +1,7 @@
 package com.example.clientweb.repository.userRepository;
 
-import com.example.clientweb.model.user.Role;
-import com.example.clientweb.model.user.UserRole;
+import com.example.clientweb.data.model.user.Role;
+import com.example.clientweb.data.model.user.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

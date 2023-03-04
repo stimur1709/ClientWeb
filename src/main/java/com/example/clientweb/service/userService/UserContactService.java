@@ -1,7 +1,7 @@
 package com.example.clientweb.service.userService;
 
-import com.example.clientweb.model.user.ContactType;
-import com.example.clientweb.model.user.UserContact;
+import com.example.clientweb.data.model.user.ContactType;
+import com.example.clientweb.data.model.user.UserContact;
 import com.example.clientweb.repository.userRepository.UserContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

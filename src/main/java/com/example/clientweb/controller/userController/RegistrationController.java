@@ -1,6 +1,6 @@
 package com.example.clientweb.controller.userController;
 
-import com.example.clientweb.dto.RegistrationDto;
+import com.example.clientweb.data.dto.RegistrationDto;
 import com.example.clientweb.service.userService.UserRegistrationService;
 import com.example.clientweb.util.BindingResultResponse;
 import com.example.clientweb.util.RegistrationValidator;

@@ -1,7 +1,7 @@
 package com.example.clientweb.service.userService;
 
-import com.example.clientweb.dto.RegistrationDto;
-import com.example.clientweb.model.user.*;
+import com.example.clientweb.data.dto.RegistrationDto;
+import com.example.clientweb.data.model.user.*;
 import com.example.clientweb.security.JWTUtil;
 import com.example.clientweb.util.Generator;
 import org.springframework.security.crypto.password.PasswordEncoder;

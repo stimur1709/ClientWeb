@@ -1,8 +1,8 @@
 package com.example.clientweb.service.userService;
 
-import com.example.clientweb.dto.AuthenticationDto;
-import com.example.clientweb.model.user.User;
-import com.example.clientweb.model.user.UserRole;
+import com.example.clientweb.data.dto.AuthenticationDto;
+import com.example.clientweb.data.model.user.User;
+import com.example.clientweb.data.model.user.UserRole;
 import com.example.clientweb.security.JWTUtil;
 import com.example.clientweb.util.Generator;
 import org.springframework.beans.factory.annotation.Autowired;

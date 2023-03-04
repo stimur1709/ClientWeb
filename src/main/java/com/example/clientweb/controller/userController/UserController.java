@@ -1,7 +1,7 @@
 package com.example.clientweb.controller.userController;
 
-import com.example.clientweb.dto.PasswordDto;
-import com.example.clientweb.dto.UserDto;
+import com.example.clientweb.data.dto.PasswordDto;
+import com.example.clientweb.data.dto.UserDto;
 import com.example.clientweb.service.userService.UserService;
 import com.example.clientweb.util.BindingResultResponse;
 import io.swagger.v3.oas.annotations.Operation;

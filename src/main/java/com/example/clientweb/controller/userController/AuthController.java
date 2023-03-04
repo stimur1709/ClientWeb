@@ -1,6 +1,6 @@
 package com.example.clientweb.controller.userController;
 
-import com.example.clientweb.dto.AuthenticationDto;
+import com.example.clientweb.data.dto.AuthenticationDto;
 import com.example.clientweb.service.userService.UserAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
