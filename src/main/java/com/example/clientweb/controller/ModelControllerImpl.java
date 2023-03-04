@@ -9,8 +9,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import java.util.Map;
 
 public abstract class ModelControllerImpl<E extends Model, S extends ModelService<E>>
@@ -31,11 +31,12 @@ public abstract class ModelControllerImpl<E extends Model, S extends ModelServic
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> save(@Valid E entity, BindingResult bindingResult) {
+    public ResponseEntity<Map<String, Object>> save(MultipartFile file, E entity, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(bindingResultResponse.getMessage(bindingResult), HttpStatus.OK);
         }
-        return new ResponseEntity<>(Map.of("result", true, entity.getClass().getName(), service.save(entity)), HttpStatus.OK);
+        return new ResponseEntity<>(Map.of("result", true, entity.getClass().getName(), service.save(entity, file)),
+                HttpStatus.OK);
     }
 
     @Override

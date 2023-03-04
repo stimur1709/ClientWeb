@@ -4,6 +4,7 @@ import com.example.clientweb.data.model.Model;
 import com.example.clientweb.repository.EntityRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 public abstract class ModelServiceImpl<E extends Model, R extends EntityRepository<E>>
         implements ModelService<E> {
@@ -25,7 +26,7 @@ public abstract class ModelServiceImpl<E extends Model, R extends EntityReposito
     }
 
     @Override
-    public E save(E entity) {
+    public E save(E entity, MultipartFile file) {
         return repository.save(entity);
     }
 }

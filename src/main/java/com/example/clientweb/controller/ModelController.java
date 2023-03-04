@@ -6,14 +6,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.Map;
 
 public interface ModelController<E extends Model> {
 
-    @PostMapping("/save")
-    ResponseEntity<Map<String, Object>> save(@RequestBody @Valid E entity, BindingResult bindingResult);
+    @PostMapping(value = "/save")
+    ResponseEntity<Map<String, Object>> save(@RequestParam(name = "file", required = false) MultipartFile file,
+                                             @ModelAttribute @Valid E entity, BindingResult bindingResult);
 
     @GetMapping
     @Operation(description = "'page' abd 'size' required parameters for the request. " +
