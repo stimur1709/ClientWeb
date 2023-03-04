@@ -11,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Map;
-
 public abstract class ModelControllerImpl<E extends Model, S extends ModelService<E>>
         implements ModelController<E> {
 
@@ -25,22 +23,21 @@ public abstract class ModelControllerImpl<E extends Model, S extends ModelServic
     }
 
     @Override
-    public Page<E> getPage(int itemType, int page, int size, boolean reverse, String sort) {
+    public ResponseEntity<Page<E>> getPage(int itemType, int page, int size, boolean reverse, String sort) {
         PageRequest pageRequest = PageRequest.of(page, size, reverse ? Sort.Direction.ASC : Sort.Direction.DESC, sort);
-        return service.findAll(itemType, pageRequest);
+        return new ResponseEntity<>(service.findAll(itemType, pageRequest), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> save(MultipartFile file, E entity, BindingResult bindingResult) {
+    public ResponseEntity<?> save(MultipartFile file, E entity, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(bindingResultResponse.getMessage(bindingResult), HttpStatus.OK);
+            return new ResponseEntity<>(bindingResultResponse.getMessage(bindingResult), HttpStatus.CONFLICT);
         }
-        return new ResponseEntity<>(Map.of("result", true, entity.getClass().getName(), service.save(entity, file)),
-                HttpStatus.OK);
+        return new ResponseEntity<>(service.save(entity, file), HttpStatus.OK) ;
     }
 
     @Override
-    public E getEducation(int id) {
-        return service.findById(id);
+    public ResponseEntity<E> getEducation(int id) {
+        return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
     }
 }

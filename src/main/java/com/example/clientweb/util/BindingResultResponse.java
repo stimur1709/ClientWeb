@@ -12,10 +12,9 @@ public class BindingResultResponse {
 
     public Map<String, Object> getMessage(BindingResult bindingResult) {
         Map<String, Object> response = new HashMap<>();
-        response.put("result", false);
-        for (FieldError fieldError : bindingResult.getFieldErrors())
+        for (FieldError fieldError : bindingResult.getFieldErrors()) {
             response.put(fieldError.getField(), fieldError.getDefaultMessage());
-
+        }
         return response;
     }
 

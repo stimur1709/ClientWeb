@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/profile")
@@ -37,18 +36,20 @@ public class UserController {
     @PostMapping("/change/password")
     @Operation(summary = "Смена пароля",
             description = "Запрос на смену пароля у пользователя.")
-    public ResponseEntity<Map<String, ?>> changePassword(@RequestBody @Valid PasswordDto passwordDTO, BindingResult bindingResult,
+    public ResponseEntity<?> changePassword(@RequestBody @Valid PasswordDto passwordDTO, BindingResult bindingResult,
                                                          HttpServletRequest request) {
-        if (bindingResult.hasErrors())
-            return new ResponseEntity<>(bindingResultResponse.getMessage(bindingResult), HttpStatus.OK);
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(bindingResultResponse.getMessage(bindingResult), HttpStatus.CONFLICT);
+        }
 
         String token = request.getHeader("Authorization").substring(7);
-        return new ResponseEntity<>(Map.of("result", userService.changePassword(token, passwordDTO)), HttpStatus.OK);
+        return new ResponseEntity<>(userService.changePassword(token, passwordDTO), HttpStatus.OK);
     }
 
     @PostMapping("/change")
-    public ResponseEntity<Map<String, ?>> changeMail(HttpServletRequest request, @RequestBody String mail) {
+    public ResponseEntity<Boolean> changeMail(HttpServletRequest request, @RequestBody String mail) {
         String token = request.getHeader("Authorization").substring(7);
-        return new ResponseEntity<>(Map.of("result", userService.changeMail(token, mail)), HttpStatus.OK);
+        boolean result = userService.changeMail(token, mail);
+        return new ResponseEntity<>(result, result ? HttpStatus.OK : HttpStatus.CONFLICT);
     }
 }
