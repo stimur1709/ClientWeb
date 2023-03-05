@@ -1,6 +1,6 @@
 package com.example.clientweb.util;
 
-import com.example.clientweb.dto.RegistrationDto;
+import com.example.clientweb.data.dto.RegistrationDto;
 import com.example.clientweb.service.userService.UserContactService;
 import com.example.clientweb.service.userService.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

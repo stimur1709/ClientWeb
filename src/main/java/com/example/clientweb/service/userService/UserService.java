@@ -1,10 +1,10 @@
 package com.example.clientweb.service.userService;
 
-import com.example.clientweb.dto.PasswordDto;
-import com.example.clientweb.dto.UserDto;
-import com.example.clientweb.model.user.ContactType;
-import com.example.clientweb.model.user.User;
-import com.example.clientweb.model.user.UserContact;
+import com.example.clientweb.data.dto.PasswordDto;
+import com.example.clientweb.data.dto.UserDto;
+import com.example.clientweb.data.model.user.ContactType;
+import com.example.clientweb.data.model.user.User;
+import com.example.clientweb.data.model.user.UserContact;
 import com.example.clientweb.repository.userRepository.UserRepository;
 import com.example.clientweb.security.JWTUtil;
 import org.modelmapper.ModelMapper;

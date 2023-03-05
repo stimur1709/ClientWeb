@@ -36,3 +36,5 @@ profile:
     expirationDay: 1
   loginAttempts: 5
   blockTimeMinUser: 5
+  upload:
+    path: src/main/resources/img

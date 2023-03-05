@@ -1,7 +1,8 @@
 package com.example.clientweb.service.userService;
 
-import com.example.clientweb.dto.RegistrationDto;
-import com.example.clientweb.model.user.*;
+import com.example.clientweb.data.dto.AuthDto;
+import com.example.clientweb.data.dto.RegistrationDto;
+import com.example.clientweb.data.model.user.*;
 import com.example.clientweb.security.JWTUtil;
 import com.example.clientweb.util.Generator;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,7 +33,7 @@ public class UserRegistrationService {
         this.jwtUtil = jwtUtil;
     }
 
-    public Map<String, Object> registrationUser(RegistrationDto registrationDTO) {
+    public AuthDto registrationUser(RegistrationDto registrationDTO) {
         User user = new User(passwordEncoder.encode(registrationDTO.getPassword()), registrationDTO.getUsername(),
                 registrationDTO.getFirstname(), registrationDTO.getLastname());
         UserContact contact = new UserContact(user, ContactType.MAIL, registrationDTO.getEmail(), generator.getSecretCode());
@@ -42,6 +42,6 @@ public class UserRegistrationService {
         userContactService.save(contact);
         List<String> roles = user.getUserRoles().stream().map(UserRole::getRole).map(Enum::toString).collect(Collectors.toList());
 
-        return Map.of("result", true, "token", jwtUtil.generateToken(user), "role", roles);
+        return new AuthDto(jwtUtil.generateToken(user), roles);
     }
 }

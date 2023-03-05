@@ -1,8 +1,9 @@
 package com.example.clientweb.service.userService;
 
-import com.example.clientweb.dto.AuthenticationDto;
-import com.example.clientweb.model.user.User;
-import com.example.clientweb.model.user.UserRole;
+import com.example.clientweb.data.dto.AuthDto;
+import com.example.clientweb.data.dto.AuthenticationDto;
+import com.example.clientweb.data.model.user.User;
+import com.example.clientweb.data.model.user.UserRole;
 import com.example.clientweb.security.JWTUtil;
 import com.example.clientweb.util.Generator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.LocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,11 +53,12 @@ public class UserAuthService {
         this.request = request;
     }
 
-    public Map<String, Object> jwtLogin(AuthenticationDto authenticationDTO) {
+    public AuthDto jwtLogin(AuthenticationDto authenticationDTO) {
         Optional<User> userOptional = userService.findUserByUsername(authenticationDTO.getUsername());
         String userNotFound = messageSource.getMessage("message.userNotFound", null, localeResolver.resolveLocale(request));
-        if (userOptional.isEmpty())
-            return getErrorResponse(userNotFound);
+        if (userOptional.isEmpty()) {
+            return new AuthDto(userNotFound);
+        }
 
         User user = userOptional.get();
         Date now = new Date();
@@ -65,7 +69,7 @@ public class UserAuthService {
         }
 
         if (user.getLoginAttempts() >= loginAttempts && difTime < blockTimeMinUser * 60000)
-            return getErrorResponse(generator.generatorTextBlockContact(difTime));
+            return new AuthDto(generator.generatorTextBlockContact(difTime));
 
         if (!blacklistService.findToken(authenticationDTO.getUsername()))
             blacklistService.delete(authenticationDTO.getUsername());
@@ -82,26 +86,19 @@ public class UserAuthService {
             if (user.getLoginAttempts() >= loginAttempts) {
                 user.setLoginTime(new Date());
                 userService.save(user);
-                return getErrorResponse(generator.generatorTextBlockContact(difTime));
+                return new AuthDto(generator.generatorTextBlockContact(difTime));
             }
 
             if (user.getLoginAttempts() > 2)
-                return getErrorResponse(generator.generatorTextBadContact(loginAttempts - user.getLoginAttempts()));
+                return new AuthDto(generator.generatorTextBadContact(loginAttempts - user.getLoginAttempts()));
 
-            return getErrorResponse(userNotFound);
+            return new AuthDto(userNotFound);
 
         }
 
         List<String> roles = user.getUserRoles().stream().map(UserRole::getRole).map(Enum::toString).collect(Collectors.toList());
 
-        return Map.of("result", true, "token", jwtUtil.generateToken(user), "role", roles);
-    }
-
-    private Map<String, Object> getErrorResponse(String text) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("result", false);
-        response.put("message", text);
-        return response;
+        return new AuthDto(jwtUtil.generateToken(user), roles);
     }
 
     public void updateLogin(User user) {

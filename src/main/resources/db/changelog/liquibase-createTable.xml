@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd                   http://www.liquibase.org/xml/ns/dbchangelog                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
     <changeSet id="1" author="stimur1709">
         <createTable tableName="users">
             <column autoIncrement="true" name="id" type="serial">
                 <constraints primaryKey="true" primaryKeyName="user_pkey"/>
             </column>
             <column name="password" type="varchar(255)"/>
-            <column name="reg_time" type="TIMESTAMP(0)">
-                <constraints nullable="false"/>
-            </column>
+            <column name="reg_time" type="TIMESTAMP(0)" defaultValueDate="now()"/>
             <column defaultValueNumeric="0" name="balance" type="int">
                 <constraints nullable="false"/>
             </column>
@@ -165,25 +162,25 @@
         </insert>
     </changeSet>
     <changeSet id="12" author="stimur1709">
-        <createTable tableName="book">
+        <createTable tableName="item">
             <column autoIncrement="true" name="id" type="SERIAL">
-                <constraints primaryKey="true" primaryKeyName="book_pkey"/>
+                <constraints primaryKey="true" primaryKeyName="item_pkey"/>
+            </column>
+            <column name="type_id" type="int">
+                <constraints nullable="false"/>
             </column>
             <column name="description" type="TEXT"/>
             <column name="image" type="VARCHAR(255)"/>
-            <column name="created_date" type="TIMESTAMP(0) WITHOUT TIME ZONE">
+            <column name="created_date" type="TIMESTAMP(0) WITHOUT TIME ZONE" defaultValueDate="now()">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_date" type="TIMESTAMP(0) WITHOUT TIME ZONE">
+            <column name="duration" type="int" defaultValueNumeric="0">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="duration" type="int">
+            <column name="popularity" type="double" defaultValueNumeric="0.0">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0.0" name="popularity" type="FLOAT8">
-                <constraints nullable="false"/>
-            </column>
-            <column defaultValueNumeric="0.0" name="rate" type="FLOAT8">
+            <column name="rate" type="double" defaultValueNumeric="0.0">
                 <constraints nullable="false"/>
             </column>
             <column name="title" type="VARCHAR(255)">
@@ -192,1126 +189,1050 @@
         </createTable>
     </changeSet>
     <changeSet id="13" author="stimur1709">
-        <createTable tableName="course">
+        <createTable tableName="item_type">
             <column autoIncrement="true" name="id" type="SERIAL">
-                <constraints primaryKey="true" primaryKeyName="course_pkey"/>
+                <constraints primaryKey="true" primaryKeyName="item_type_pkey"/>
             </column>
+            <column name="name" type="VARCHAR(30)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="14" author="stimur1709">
+        <addForeignKeyConstraint baseTableName="item" baseColumnNames="type_id"
+                                 constraintName="fk7xoa8targ71ol1st4fd9type" referencedTableName="item_type"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="15" author="stimur1709">
+        <createTable tableName="author">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="author_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
             <column name="description" type="TEXT"/>
-            <column name="image" type="VARCHAR(255)"/>
-            <column name="created_date" type="TIMESTAMP(0) WITHOUT TIME ZONE">
+            <column name="photo" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="16" author="stimur1709">
+        <createTable tableName="item2author">
+            <column name="author_id" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_date" type="TIMESTAMP(0) WITHOUT TIME ZONE">
-                <constraints nullable="false"/>
-            </column>
-            <column defaultValueNumeric="0" name="duration" type="int">
-                <constraints nullable="false"/>
-            </column>
-            <column defaultValueNumeric="0.0" name="popularity" type="FLOAT8">
-                <constraints nullable="false"/>
-            </column>
-            <column defaultValueNumeric="0.0" name="rate" type="FLOAT8">
-                <constraints nullable="false"/>
-            </column>
-            <column name="title" type="VARCHAR(255)">
+            <column name="item_id" type="int">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="14" author="stimur1709">
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+    <changeSet id="17" author="stimur1709">
+        <addPrimaryKey tableName="item2author" columnNames="author_id, item_id"
+                       constraintName="item2author_pkey"/>
+    </changeSet>
+    <changeSet id="18" author="stimur1709">
+        <addForeignKeyConstraint baseTableName="item2author" baseColumnNames="author_id"
+                                 constraintName="fk7xoa8targ71ol1st4fd9auth" referencedTableName="author"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="19" author="stimur1709">
+        <addForeignKeyConstraint baseTableName="item2author" baseColumnNames="item_id"
+                                 constraintName="fk8joa8targ71ol1st4fdtype" referencedTableName="item"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="20" author="stimur1709">
+        <insert tableName="item_type">
+            <column name="id" value="1"/>
+            <column name="name" value="book"/>
+        </insert>
+        <insert tableName="item_type">
+            <column name="id" value="2"/>
+            <column name="name" value="genre"/>
+        </insert>
+    </changeSet>
+    <changeSet id="21" author="stimur1709">
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Анна Каренина"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Анна Каренина"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Преступление и наказание"/>
             <column name="image" value="https://dummyimage.com/735x470.png/ff4444/ffffff"/>
             <column name="description" value="Преступление и наказание"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Война и мир"/>
             <column name="image" value="https://dummyimage.com/683x577.png/dddddd/000000"/>
             <column name="description" value="Война и мир"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Идиот"/>
             <column name="image" value="https://dummyimage.com/751x457.png/ff4444/ffffff"/>
             <column name="description" value="Идиот"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Мастер и Маргарита"/>
             <column name="image" value="https://dummyimage.com/414x638.png/dddddd/000000"/>
             <column name="description" value="Мастер и Маргарита"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Мёртвые души"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Мёртвые души"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Собачье сердце"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Собачье сердце"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Евгений Онегин"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Евгений Онегин"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Отцы и дети"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Отцы и дети"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Повести Белкина"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Повести Белкина"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Рассказы"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Рассказы"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Горе от ума"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Горе от ума"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Одноэтажная Америка"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Одноэтажная Америка"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Гарри Поттер и узник Азкабана"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Гарри Поттер и узник Азкабана"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="451° по Фаренгейту"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="451° по Фаренгейту"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="1984"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="1984"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Шантарам"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Шантарам"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Три товарища"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Три товарища"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Цветы для Элджернона"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Цветы для Элджернона"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Портрет Дориана Грея"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Портрет Дориана Грея"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Маленький принц"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Маленький принц"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Над пропастью во ржи"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Над пропастью во ржи"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Вино из одуванчиков"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Вино из одуванчиков"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Атлант расправил плечи"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Атлант расправил плечи"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Убить пересмешника"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Убить пересмешника"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Сто лет одиночества"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Сто лет одиночества"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Двенадцать стульев"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Двенадцать стульев"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Триумфальная арка"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Триумфальная арка"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Граф Монте-Кристо"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Граф Монте-Кристо"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Великий Гэтсби"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Великий Гэтсби"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Гарри Поттер и философский камень"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Гарри Поттер и философский камень"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Жизнь взаймы"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Жизнь взаймы"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Гордость и предубеждение"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Гордость и предубеждение"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Бойцовский клуб"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Бойцовский клуб"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Книжный вор"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Книжный вор"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Зелёная миля"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Зелёная миля"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="О дивный новый мир"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="О дивный новый мир"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Герой нашего времени"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Герой нашего времени"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Марсианин"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Марсианин"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Братья Карамазовы"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Братья Карамазовы"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Унесённые ветром"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Унесённые ветром"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Дом, в котором…"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Дом, в котором…"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Гарри Поттер и орден Феникса"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Гарри Поттер и орден Феникса"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Понедельник начинается в субботу"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Понедельник начинается в субботу"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Алхимик"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Алхимик"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Бесы"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Бесы"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Гарри Поттер и тайная комната"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Гарри Поттер и тайная комната"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Игра престолов"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Игра престолов"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Гарри Поттер и Кубок огня"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Гарри Поттер и Кубок огня"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Старик и море"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Старик и море"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Властелин колец"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Властелин колец"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Одиночество в Сети"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Одиночество в Сети"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Марсианские хроники"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="лл"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Канун Всех Святых"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description"
                     value="Такого дерева вы не видели никогда в жизни. Оно достигает вершиной небес, и растут на нем тыквы всех форм, размеров и цветов. Возле этого дерева вы встречаете странного господина по имени мистер Смерч, и он увлекает вас в чудесное путешествие, из которого вы вернетесь совсем другим человеком – если вернетесь…"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Смерть – дело одинокое"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description"
                     value="1949 год. Венеция, штат Калифорния. 'Американские горки' разобраны на металлолом. Кинотеатр на пирсе пуст и заколочен. В львиной клетке, затопленной в канале, находят мертвое тело. Первое из многих... Все склонны считать, что никакой связи между смертями нет. Кроме детектива Элмо Крамли и странного молодого человека, целыми днями просиживающего за пишущей машинкой и рассылающего свои рассказы в журналы 'Черная маска', 'Сверхъестественные истории', 'Мадмуазель'. Роман Брэдбери, написанный через двадцать с лишним лет после 'Надвигается беда', удивил всех. 'Смерть -     дело одинокое' - это дань памяти 'крутым' детективам Р.Чандлера и Д.Хэммета и классическому голливудскому нуару."/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Кладбище для безумцев. Еще одна повесть о двух городах"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description"
                     value="«Кладбище для безумцев: Еще одна повесть о двух городах» – второй роман в условной трилогии, к которой также относятся «Смерть – дело одинокое» и «Давайте все убьем Констанцию». Снова действие происходит в Голливуде, снова ближайшей жанровой аналогией – хотя отнюдь не исчерпывающей – будет детектив-нуар. Ровно в полночь во время хеллоуинской вечеринки на примыкающем к легендарной студии легендарном кладбище главный герой (писатель-фантаст и сценарист, альтер эго самого Брэдбери) видит студийного магната, погибшего в такую же ночь Хеллоуина двадцать лет назад. Отыскать выход из лабиринта смертей, реальных и мнимых, герою помогают надменный австрийско-китайский режиссер с неизменным моноклем и бальзамировщик мумии Ленина, иисусоподобный забулдыга по имени Иисус Христос и лучший в мире аниматор динозавров."/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Зеленые тени, Белый Кит"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description"
                     value="Этой во многом автобиографичной книги могло бы не существовать, если бы известный голливудский режиссер Джон Хьюстон в 1953 году не предложил Рэю Брэдбери приехать в Ирландию и написать сценарий к экранизации «Моби Дика». С тех пор «Изумрудный остров» стал одной из любимых «этнических» тем Брэдбери: именно ему он посвятил множество своих великолепных рассказов. Роман «Зеленые тени, Белый Кит» – это запоздалое признание в любви людям, стране и народу, с которыми его свела судьба много лет назад."/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Из праха восставшие"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description"
                     value="Роман, писавшийся более полувека - с 1945 года до 2000-го - от одной символической даты до другой. Роман, развившийся из рассказов 'Апрельское колдовство', 'Дядюшка Эйнар' и 'Странница', на которых выросло не одно поколение советских, а потом и российских читателей. Роман, у истоков которого стоял знаменитый художник Чарли Аддамс - творец 'Семейки Аддамсов'. И семейка Эллиотов, героев 'Из праха восставших', ничуть не уступает Аддамсам. В предлагаемой вашему вниманию семейной хронике переплетаются истории графа Дракулы и египетской мумии, мыши, прошедшей полмира, и призрака 'Восточного экспресса', четырех развоплощенных кузенов и Фивейского голоса..."/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Давайте все убьем Констанцию"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description"
                     value="Знаменитая киноактриса Констанция Раттиган получает пренеприятную посылку: записную книжку с телефонами давно умерших. Есть, чему пугаться, ведь имена немногих оставшихся в живых помечены жирным крестом, в том числе и фамилия самой Констанции. Чтобы спасти ее и раскрыть загадку последовавшей за этим цепочки смертей, потрясших Голливуд воспоминаний и Голливуд современности, героям нового романа Брэдбери (уже знакомым читателю по произведению 'Смерть - дело одинокое') придется Констанцию убить. Причем всем вместе."/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Лето, прощай"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description"
                     value="Все прекрасно знают 'Вино из одуванчиков' - классическое произведение Рэя Брэдбери, вошедшее в золотой фонд мировой литературы. А его продолжение пришлось ждать полвека! Свое начало роман 'Лето, прощай' берет в том же 1957 году, когда представленное в издательство 'Вино из одуванчиков' показалось редактору слишком длинным и тот попросил Брэдбери убрать заключительную часть. Пятьдесят лет этот 'хвост' жил своей жизнью, развивался и переписывался, пока не вырос в полноценный роман, который вы держите в руках."/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Лед и пламя"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description"
                     value="`...Даже выбираясь за границы навечно облюбованной Калифорнии, этот чудак пользовался исключительно велосипедом - никаких автомобилей или самолетов. Где еще вы найдете такого фантаста?..` Курт Воннегут Опубликовав свой первый рассказ в середине 1940 - х, уже через пять лет Рэй Дуглас Брэдбери получил славу живого классика американской литературы. Его смешные и мудрые сказки на протяжении полувека ни на день не покидали строчек книжных хит - парадов планеты. В 2000 году Брэдбери исполнилось восемьдесят. В данный том юбилейного собрания сочинений вошел `любимый роман братьев Стругацких` `Марсианские хроники` и лучшие из рассказов писателя."/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Ревун"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description"
                     value="«Среди холодных волн, вдали от суши, мы каждый вечер ждали, когда приползет туман. Он приползал, и мы – Макдан и я – смазывали латунные подшипники и включали фонарь на верху каменной башни. Макдан и я, две птицы в сумрачном небе… Красный луч… белый… снова красный искал в тумане одинокие суда. А не увидят луча, так ведь у нас есть еще Голос – могучий низкий голос нашего Ревуна; он рвался, громогласный, сквозь лохмотья тумана, и перепуганные чайки разлетались, будто подброшенные игральные карты, а волны дыбились, шипя пеной…»"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Чикагская бездна"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description"
                     value="В сборник избранных произведений Рэя Дугласа Брэдбери вошел философско-приключенческий роман 'Надвигается беда'и отмеченные колоритом новеллы, большинство которых публикуется на русском языке впервые."/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Темный карнавал (сборник)"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description"
                     value="Настоящая книга поистине уникальна – это самый первый сборник Брэдбери, с тех пор фактически не переиздававшийся, не доступный больше нигде в мире и ни на каком языке вот уже 60 лет! Отдельные рассказы из «Темного карнавала» (в том числе такие классические, как «Странница» и «Крошка-убийца», «Коса» и «Дядюшка Эйнар») перерабатывались и включались в более поздние сборники, однако переиздавать свой дебют в исходном виде Брэдбери категорически отказывался. Переубедить мэтра удалось ровно дважды: в 2001 году он согласился на коллекционное переиздание крошечным тиражом (снабженное несколькими предисловиями, авторским вводным комментарием к каждому рассказу и послесловием Клайва Баркера), немедленно также ставшее библиографической редкостью, а в 2008-м – на российское издание."/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Человек в картинках"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description"
                     value="ЧЕЛОВЕК В КАРТИНКАХ - второй сборник рассказов Рэя Брэдбери, опубликованный в 1951 году. В сборник вошли рассказы, написанные автором в 1946-1951 годах. В книге собраны лучшие образцы философской фантастики, надолго ставшие визитной карточкой писателя. Предлагаем вниманию читателей неадаптированный английский текст рассказов, снабженный комментариями и словарем."/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Золотые яблоки Солнца"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description"
                     value="Мечты у всех разные. Кто-то хочет снять самый великий фильм всех времен и народов. Кому-то позарез нужно подстрелить тиранозавра, пусть даже ценой гибели цивилизации. А кто-то жаждет откусить кусочек от золотого яблока Солнца, но при этом не обжечься. И так заманчиво отбросить суету повседневности и пуститься в путь за своей мечтой."/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Октябрьская страна"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description"
                     value="Еще девятнадцать историй от великою мастера. В предисловии к сборнику Рэй Брэдбери немного приоткрывает дверь на свою писательскую кухню. Загляните в щелочку - и узнаете верный рецепт, как написать гениальный рассказ о старушке, которая не пожелала умирать, или о странном постояльце со второго этажа, предпочитавшем работать по ночам. Правда, для этого для начала нужно родиться всего лишь Рэем Брэдбери."/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Лекарство от меланхолии"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description"
                     value="' Когда все потеряно, остается надежда', - утверждает герой одного из рассказов Рэя Брэдбери. И эти слова могли бы стать эпиграфом ко всему сборнику 'Лекарство от меланхолии', на страницах которого всегда найдется место для грустных улыбок и добрых чудес. Книга представляет собой оригинальный авторский сборник."/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Р - значит ракета"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description"
                     value="Издание 1973 года. Сохранность хорошая. Сборник фантастических рассказов крупнейшего американского фантаста Рэя Брэдбери. Перевод с английского Н.Галь, Э.Кабалевской. Составитель Л.Жданов, послесловие Р.Подольного. В сборник вошли рассказы: 'Р- значит ракета', 'Конец начальной поры', 'Ревун', 'Ракета', 'Космонавт', 'Золотые яблоки Солнца', 'Игрянул гром...', 'Нескончаемый дождь' и др."/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Механизмы радости"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description"
                     value="У этих механизмов никогда не бывает сбоев. Они вечны, как вечный двигатель и снега на вершине Килиманджаро. Потому что человек, их создавший, один из лучших в мире выдумщиков небывалых вещей, Рэй Брэдбери, писатель, фантаст, поэт, для которого создавать механизмы радости такое же привычное ремесло, как для пекаря делать хлеб, а для винодела - вино."/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Далеко за полночь"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description"
                     value="Полночь - это дверь, ведущая в волшебную даль. За ней могут скрываться история первой любви и украденный попугай Хемингуэя, самозародившиеся знойным летом зло в людском обличье и заводной Бернард Шоу, воскресенье в Дублине и отпуск в Мексике у подножия грозного вулкана. В этих двадцати двух рассказах - квинтэссенция зрелого Брэдбери, на полпути от Золотых яблок Солнца к Вождению вслепую."/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Истории о динозаврах"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description"
                     value="1. Этот сборник всемирно известного классика Рэя Брэдбери впервые выходит на русском языке именно таким, каким его задумал автор! Полный цикл рассказов о динозаврах в авторском составе и последовательности.2. Самый знаменитый рассказ этого цикла был экранизирован и известен широкой публике по фильму «И грянул гром…».3. Эти истории заставляют задуматься и будят воображение. 4. Книги Рэя Брэдбери обязательно должны быть в читательском багаже будущего взрослого, они входит в золотой фонт мировой литературы. 5. Динозавры остаются одним из самых популярных детских увлечений вот уже много десятилетий. Новые открытия, фильмы и книги только подстегивают этот интерес, стимулируя любознательность, тягу к новым знаниям, желание быть спецом в любимой теме. Эта книга must have для всех любителей!"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="К западу от Октября"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description"
                     value="В спальне захолустного мотеля на почетном месте стоит надгробный камень. Древний ирландский призрак преследует знаменитого кинорежиссера всей силой своей нерастраченной любви. Герою-авиатору Первой мировой войны мнится, что ему выставлен счет за былые победы. От современного классика американской литературы - двадцать три истории о любви и смерти."/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="В мгновенье ока"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description" value="Марсианин"/>
         </insert>
-        <insert tableName="book">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
+        <insert tableName="item">
+            <column name="type_id" value="1"/>
             <column name="title" value="Надвигается беда"/>
             <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
             <column name="description"
                     value="Серьезное и тяжелое произведение Рэя Брэдбери, наполненное метафорами, различными символами и мистикой. Брэдбери раскрывает противостояния светлого и темного начал в человеке, выводя на свет самые затаенные желания, страхи и искушения под масками жителей Гринтауна, сталкивающихся с мрачными Людьми Осени."/>
         </insert>
     </changeSet>
-    <changeSet id="15" author="stimur1709">
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Анна Каренина"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Анна Каренина"/>
+    <changeSet id="22" author="stimur1709">
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Лев Толстой"/>
+            <column name="description" value="Лев Толстой"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Преступление и наказание"/>
-            <column name="image" value="https://dummyimage.com/735x470.png/ff4444/ffffff"/>
-            <column name="description" value="Преступление и наказание"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Федор Достаевский"/>
+            <column name="description" value="Федор Достаевский"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Война и мир"/>
-            <column name="image" value="https://dummyimage.com/683x577.png/dddddd/000000"/>
-            <column name="description" value="Война и мир"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Михаил Булгаков"/>
+            <column name="description" value="Михаил Булгаков"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Идиот"/>
-            <column name="image" value="https://dummyimage.com/751x457.png/ff4444/ffffff"/>
-            <column name="description" value="Идиот"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Николай Гоголь"/>
+            <column name="description" value="Николай Гоголь"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Мастер и Маргарита"/>
-            <column name="image" value="https://dummyimage.com/414x638.png/dddddd/000000"/>
-            <column name="description" value="Мастер и Маргарита"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Александр Пушкин"/>
+            <column name="description" value="Александр Пушкин"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Мёртвые души"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Мёртвые души"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Иван Тургенев"/>
+            <column name="description" value="Иван Тургенев"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Собачье сердце"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Собачье сердце"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Антон Чехов"/>
+            <column name="description" value="Антон Чехов"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Евгений Онегин"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Евгений Онегин"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Александр Грибоедов"/>
+            <column name="description" value="Александр Грибоедов"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Отцы и дети"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Отцы и дети"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Илья Ильф"/>
+            <column name="description" value="Илья Ильф"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Повести Белкина"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Повести Белкина"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Евгений Петров"/>
+            <column name="description" value="Евгений Петров"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Рассказы"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Рассказы"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Джоан Роулинг"/>
+            <column name="description" value="Джоан Роулинг"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Горе от ума"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Горе от ума"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Джон Рональд Руэл Толкин"/>
+            <column name="description" value="Джон Рональд Руэл Толкин"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Одноэтажная Америка"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Одноэтажная Америка"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Джордж Оруэлл"/>
+            <column name="description" value="Джордж Оруэлл"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Гарри Поттер и узник Азкабана"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Гарри Поттер и узник Азкабана"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Грегори Дэвид Робертс"/>
+            <column name="description" value="Грегори Дэвид Робертс"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="451° по Фаренгейту"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="451° по Фаренгейту"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Эрих Мария Ремарк"/>
+            <column name="description" value="Эрих Мария Ремарк"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="1984"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="1984"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Дэниел Киз"/>
+            <column name="description" value="Дэниел Киз"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Шантарам"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Шантарам"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Оскар Уайльд"/>
+            <column name="description" value="Оскар Уайльд"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Три товарища"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Три товарища"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Антуан де Сент-Экзюпери"/>
+            <column name="description" value="Антуан де Сент-Экзюпери"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Цветы для Элджернона"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Цветы для Элджернона"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Джером Д. Сэлинджер"/>
+            <column name="description" value="Джером Д. Сэлинджер"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Портрет Дориана Грея"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Портрет Дориана Грея"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Маленький принц"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Маленький принц"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Над пропастью во ржи"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Над пропастью во ржи"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Вино из одуванчиков"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Вино из одуванчиков"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Атлант расправил плечи"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Атлант расправил плечи"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Убить пересмешника"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Убить пересмешника"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Сто лет одиночества"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Сто лет одиночества"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Двенадцать стульев"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Двенадцать стульев"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Триумфальная арка"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Триумфальная арка"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Граф Монте-Кристо"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Граф Монте-Кристо"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Великий Гэтсби"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Великий Гэтсби"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Гарри Поттер и философский камень"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Гарри Поттер и философский камень"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Жизнь взаймы"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Жизнь взаймы"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Гордость и предубеждение"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Гордость и предубеждение"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Бойцовский клуб"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Бойцовский клуб"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Книжный вор"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Книжный вор"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Зелёная миля"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Зелёная миля"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="О дивный новый мир"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="О дивный новый мир"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Герой нашего времени"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Герой нашего времени"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Марсианин"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Марсианин"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Братья Карамазовы"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Братья Карамазовы"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Унесённые ветром"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Унесённые ветром"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Дом, в котором…"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Дом, в котором…"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Гарри Поттер и орден Феникса"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Гарри Поттер и орден Феникса"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Понедельник начинается в субботу"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Понедельник начинается в субботу"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Алхимик"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Алхимик"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Бесы"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Бесы"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Гарри Поттер и тайная комната"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Гарри Поттер и тайная комната"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Игра престолов"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Игра престолов"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Гарри Поттер и Кубок огня"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Гарри Поттер и Кубок огня"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Старик и море"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Старик и море"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Властелин колец"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Властелин колец"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Одиночество в Сети"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Одиночество в Сети"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Марсианские хроники"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="лл"/>
-        </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Канун Всех Святых"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Рэй Брэдбери"/>
             <column name="description"
-                    value="Такого дерева вы не видели никогда в жизни. Оно достигает вершиной небес, и растут на нем тыквы всех форм, размеров и цветов. Возле этого дерева вы встречаете странного господина по имени мистер Смерч, и он увлекает вас в чудесное путешествие, из которого вы вернетесь совсем другим человеком – если вернетесь…"/>
+                    value="Рэй Брэдбери — американский писатель. Рэй Дуглас Брэдбери родом из городка Уокиган, штат Иллинойс. Он появился на свет в августе 1920 года. По отцу у автора английские корни, а по матери — шведские. В семье появилось ещё трое детей, однако пережил младенчество лишь его брат Леонард. &#10;&#10;Раннее знакомство со смертью оставило глубокий след в душе Брэдбери, что нашло отражение в его творчестве. В доме любили искусство, особенно новую диковинку века — кинематограф. Великая депрессия привела родителей Брэдбери на заработки в Лос-Анджелес. После школы парень начал зарабатывать, продавая газеты. Семья не могла дать денег сыновьям на колледж, потому Рэй так и не получил высшего образования. Он сам занялся своим просвещением, посещая библиотеки. Так он познакомился с трудами Достоевского, чьё творчество, по мнению американца, сильно на него повлияло. Брэдбери с 12 лет мечтал писать. Тогда он попробовал сочинить продолжение «Великого воина Марса» Берроуза. Через 5 лет юноша стал членом американского сообщества молодых авторов — «Лиги научных фантастов» Лос-Анджелеса. Рэй писал рассказы, выходившие в дешёвых литературных журналах. Зарабатывать только творчеством было тяжело, но он не сдавался. В 1947-ом вышел первый сборник его рассказов «Тёмный карнавал», встреченный, увы, прохладно. В 1949 году молодой человек перебрался из провинции в Нью-Йорк. Он предложил свои произведения двенадцати издательствам, но везде получил отказ. Лишь одно из них заинтересовалось его текстами. Автору выдвинули условие: для публикации его рассказы должны быть объединены в роман. За ночь Рэй набросал концепцию будущего произведения в виде эссе, содержащее первые наброски будущих «Марсианских хроник». После выхода в свет они в корне изменили представление о жанре научной фантастики. Эту работу её создатель считал лучшей у себя. Всемирная известность настигла автора в 1953-ем после публикации романа «451 градус по Фаренгейту». Впервые он вышел частями в журнале Playboy, который только начал набирать популярность. Главный герой романа Гай Монтэг живёт в тоталитарном обществе потребления. Он работает пожарным, чья задача сжигать книги. Гай считает, что дело пожарных правое и нужное. После встречи с загадочной девушкой его взгляды меняются. Роман долгое время издавался с серьёзными поправками из-за жёсткой цензуры издательства. Однако в 1980-ом Брэдбери удалось отвоевать каждый выкинутый кусок своего детища. В будущем текст «451 градус по Фаренгейту» выходил без сокращений. Автора окрестили «мэтром фантастики». Правда, он никогда не ограничивался рамками этого жанра. Так в 1957-ом мир увидел «Вино из одуванчиков» — отчасти биографическую повесть Рэя. В центре сюжета живущие в маленьком городке братья Том и Дуглас Сполдинги (их фамилия — второе имя отца Брэдбери). Дуглас — альтер-эго самого писателя в детстве. Изначально рукопись тянула на полноценный роман, однако издатель потребовал разделить её на две части. «Лето, прощай!», вторая половинка той истории, вышла спустя полвека. Это произведение стало последней прижизненной публикацией Брэдбери. Самое передаваемое произведение фантаста — «И грянул гром», в основе которого лежит «теория хаоса», более известная под названием «эффект бабочки». Он о том, что равновесие в природе хрупко. Сюжет рассказа послужил основой для нескольких фильмов и сериалов. Творческая деятельность Рэя также распространялась на кино и театр. Он писал сценарии, был автором и ведущим нескольких телепередач. Писатель не раз получал награды в области фантастической литературы, в том числе премии «Небьюла» и «Хьюго», Американской академии и Пулитцеровской премии. Со своей единственной супругой Маргарет Маклюр Рэй познакомился в сентябре 1947 года в книжном магазине, где девушка работала продавцом. Первые годы брака она тянула всю семью, ведь Брэдбери не удавалось хорошо заработать творчеством. Он ласково назвал супругу Мэгги и прожил с ней вместе вплоть до её смерти в 2003-ем. Именно Маргаретт автор посвятил «Марсианские хроники». У супругов было четверо дочерей — Сьюзен, Рамона, Александра и Беттина. Жизнь Рэя была полностью посвящена литературе до самых последних дней. Его утро неизменно начиналось за рабочим столом. Фантаст верил, что творчество продлевает ему жизнь. После инсульта в 1999 году Брэдбери уже не вставал с инвалидного кресла. Знаменитый фантаст умер на 91 году жизни 5 июня 2012-го в Лос-Анджелесе."/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Смерть – дело одинокое"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description"
-                    value="1949 год. Венеция, штат Калифорния. 'Американские горки' разобраны на металлолом. Кинотеатр на пирсе пуст и заколочен. В львиной клетке, затопленной в канале, находят мертвое тело. Первое из многих... Все склонны считать, что никакой связи между смертями нет. Кроме детектива Элмо Крамли и странного молодого человека, целыми днями просиживающего за пишущей машинкой и рассылающего свои рассказы в журналы 'Черная маска', 'Сверхъестественные истории', 'Мадмуазель'. Роман Брэдбери, написанный через двадцать с лишним лет после 'Надвигается беда', удивил всех. 'Смерть -     дело одинокое' - это дань памяти 'крутым' детективам Р.Чандлера и Д.Хэммета и классическому голливудскому нуару."/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Рэнд Айн"/>
+            <column name="description" value="Рэнд Айн"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Кладбище для безумцев. Еще одна повесть о двух городах"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description"
-                    value="«Кладбище для безумцев: Еще одна повесть о двух городах» – второй роман в условной трилогии, к которой также относятся «Смерть – дело одинокое» и «Давайте все убьем Констанцию». Снова действие происходит в Голливуде, снова ближайшей жанровой аналогией – хотя отнюдь не исчерпывающей – будет детектив-нуар. Ровно в полночь во время хеллоуинской вечеринки на примыкающем к легендарной студии легендарном кладбище главный герой (писатель-фантаст и сценарист, альтер эго самого Брэдбери) видит студийного магната, погибшего в такую же ночь Хеллоуина двадцать лет назад. Отыскать выход из лабиринта смертей, реальных и мнимых, герою помогают надменный австрийско-китайский режиссер с неизменным моноклем и бальзамировщик мумии Ленина, иисусоподобный забулдыга по имени Иисус Христос и лучший в мире аниматор динозавров."/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Харпер Ли"/>
+            <column name="description" value="Харпер Ли"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Зеленые тени, Белый Кит"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description"
-                    value="Этой во многом автобиографичной книги могло бы не существовать, если бы известный голливудский режиссер Джон Хьюстон в 1953 году не предложил Рэю Брэдбери приехать в Ирландию и написать сценарий к экранизации «Моби Дика». С тех пор «Изумрудный остров» стал одной из любимых «этнических» тем Брэдбери: именно ему он посвятил множество своих великолепных рассказов. Роман «Зеленые тени, Белый Кит» – это запоздалое признание в любви людям, стране и народу, с которыми его свела судьба много лет назад."/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Габриэль Гарсиа Маркес"/>
+            <column name="description" value="Габриэль Гарсиа Маркес"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Из праха восставшие"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description"
-                    value="Роман, писавшийся более полувека - с 1945 года до 2000-го - от одной символической даты до другой. Роман, развившийся из рассказов 'Апрельское колдовство', 'Дядюшка Эйнар' и 'Странница', на которых выросло не одно поколение советских, а потом и российских читателей. Роман, у истоков которого стоял знаменитый художник Чарли Аддамс - творец 'Семейки Аддамсов'. И семейка Эллиотов, героев 'Из праха восставших', ничуть не уступает Аддамсам. В предлагаемой вашему вниманию семейной хронике переплетаются истории графа Дракулы и египетской мумии, мыши, прошедшей полмира, и призрака 'Восточного экспресса', четырех развоплощенных кузенов и Фивейского голоса..."/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Эрнест Хемингуэй"/>
+            <column name="description" value="Эрнест Хемингуэй"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Давайте все убьем Констанцию"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description"
-                    value="Знаменитая киноактриса Констанция Раттиган получает пренеприятную посылку: записную книжку с телефонами давно умерших. Есть, чему пугаться, ведь имена немногих оставшихся в живых помечены жирным крестом, в том числе и фамилия самой Констанции. Чтобы спасти ее и раскрыть загадку последовавшей за этим цепочки смертей, потрясших Голливуд воспоминаний и Голливуд современности, героям нового романа Брэдбери (уже знакомым читателю по произведению 'Смерть - дело одинокое') придется Констанцию убить. Причем всем вместе."/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Александр Дюма"/>
+            <column name="description" value="Александр Дюма"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Лето, прощай"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description"
-                    value="Все прекрасно знают 'Вино из одуванчиков' - классическое произведение Рэя Брэдбери, вошедшее в золотой фонд мировой литературы. А его продолжение пришлось ждать полвека! Свое начало роман 'Лето, прощай' берет в том же 1957 году, когда представленное в издательство 'Вино из одуванчиков' показалось редактору слишком длинным и тот попросил Брэдбери убрать заключительную часть. Пятьдесят лет этот 'хвост' жил своей жизнью, развивался и переписывался, пока не вырос в полноценный роман, который вы держите в руках."/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Фрэнсис Скотт Фицджеральд"/>
+            <column name="description" value="Фрэнсис Скотт Фицджеральд"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Лед и пламя"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description"
-                    value="`...Даже выбираясь за границы навечно облюбованной Калифорнии, этот чудак пользовался исключительно велосипедом - никаких автомобилей или самолетов. Где еще вы найдете такого фантаста?..` Курт Воннегут Опубликовав свой первый рассказ в середине 1940 - х, уже через пять лет Рэй Дуглас Брэдбери получил славу живого классика американской литературы. Его смешные и мудрые сказки на протяжении полувека ни на день не покидали строчек книжных хит - парадов планеты. В 2000 году Брэдбери исполнилось восемьдесят. В данный том юбилейного собрания сочинений вошел `любимый роман братьев Стругацких` `Марсианские хроники` и лучшие из рассказов писателя."/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Джейн Остин"/>
+            <column name="description" value="Джейн Остин"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Ревун"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description"
-                    value="«Среди холодных волн, вдали от суши, мы каждый вечер ждали, когда приползет туман. Он приползал, и мы – Макдан и я – смазывали латунные подшипники и включали фонарь на верху каменной башни. Макдан и я, две птицы в сумрачном небе… Красный луч… белый… снова красный искал в тумане одинокие суда. А не увидят луча, так ведь у нас есть еще Голос – могучий низкий голос нашего Ревуна; он рвался, громогласный, сквозь лохмотья тумана, и перепуганные чайки разлетались, будто подброшенные игральные карты, а волны дыбились, шипя пеной…»"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Чак Паланик"/>
+            <column name="description" value="Чак Паланик"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Чикагская бездна"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description"
-                    value="В сборник избранных произведений Рэя Дугласа Брэдбери вошел философско-приключенческий роман 'Надвигается беда'и отмеченные колоритом новеллы, большинство которых публикуется на русском языке впервые."/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Маркус Зусак"/>
+            <column name="description" value="Маркус Зусак"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Темный карнавал (сборник)"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description"
-                    value="Настоящая книга поистине уникальна – это самый первый сборник Брэдбери, с тех пор фактически не переиздававшийся, не доступный больше нигде в мире и ни на каком языке вот уже 60 лет! Отдельные рассказы из «Темного карнавала» (в том числе такие классические, как «Странница» и «Крошка-убийца», «Коса» и «Дядюшка Эйнар») перерабатывались и включались в более поздние сборники, однако переиздавать свой дебют в исходном виде Брэдбери категорически отказывался. Переубедить мэтра удалось ровно дважды: в 2001 году он согласился на коллекционное переиздание крошечным тиражом (снабженное несколькими предисловиями, авторским вводным комментарием к каждому рассказу и послесловием Клайва Баркера), немедленно также ставшее библиографической редкостью, а в 2008-м – на российское издание."/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Стивен Кинг"/>
+            <column name="description" value="Стивен Кинг"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Человек в картинках"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description"
-                    value="ЧЕЛОВЕК В КАРТИНКАХ - второй сборник рассказов Рэя Брэдбери, опубликованный в 1951 году. В сборник вошли рассказы, написанные автором в 1946-1951 годах. В книге собраны лучшие образцы философской фантастики, надолго ставшие визитной карточкой писателя. Предлагаем вниманию читателей неадаптированный английский текст рассказов, снабженный комментариями и словарем."/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Олдос Хаксли"/>
+            <column name="description" value="Олдос Хаксли"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Золотые яблоки Солнца"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description"
-                    value="Мечты у всех разные. Кто-то хочет снять самый великий фильм всех времен и народов. Кому-то позарез нужно подстрелить тиранозавра, пусть даже ценой гибели цивилизации. А кто-то жаждет откусить кусочек от золотого яблока Солнца, но при этом не обжечься. И так заманчиво отбросить суету повседневности и пуститься в путь за своей мечтой."/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Михаил Лермонтов"/>
+            <column name="description" value="Михаил Лермонтов"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Октябрьская страна"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description"
-                    value="Еще девятнадцать историй от великою мастера. В предисловии к сборнику Рэй Брэдбери немного приоткрывает дверь на свою писательскую кухню. Загляните в щелочку - и узнаете верный рецепт, как написать гениальный рассказ о старушке, которая не пожелала умирать, или о странном постояльце со второго этажа, предпочитавшем работать по ночам. Правда, для этого для начала нужно родиться всего лишь Рэем Брэдбери."/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Энди Вейер"/>
+            <column name="description" value="Энди Вейер"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Лекарство от меланхолии"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description"
-                    value="' Когда все потеряно, остается надежда', - утверждает герой одного из рассказов Рэя Брэдбери. И эти слова могли бы стать эпиграфом ко всему сборнику 'Лекарство от меланхолии', на страницах которого всегда найдется место для грустных улыбок и добрых чудес. Книга представляет собой оригинальный авторский сборник."/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Маргарет Митчелл"/>
+            <column name="description" value="Маргарет Митчелл"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Р - значит ракета"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description"
-                    value="Издание 1973 года. Сохранность хорошая. Сборник фантастических рассказов крупнейшего американского фантаста Рэя Брэдбери. Перевод с английского Н.Галь, Э.Кабалевской. Составитель Л.Жданов, послесловие Р.Подольного. В сборник вошли рассказы: 'Р- значит ракета', 'Конец начальной поры', 'Ревун', 'Ракета', 'Космонавт', 'Золотые яблоки Солнца', 'Игрянул гром...', 'Нескончаемый дождь' и др."/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Мариам Петросян"/>
+            <column name="description" value="Мариам Петросян"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Механизмы радости"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description"
-                    value="У этих механизмов никогда не бывает сбоев. Они вечны, как вечный двигатель и снега на вершине Килиманджаро. Потому что человек, их создавший, один из лучших в мире выдумщиков небывалых вещей, Рэй Брэдбери, писатель, фантаст, поэт, для которого создавать механизмы радости такое же привычное ремесло, как для пекаря делать хлеб, а для винодела - вино."/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Аркадий Стругацкий"/>
+            <column name="description" value="Аркадий Стругацкий"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Далеко за полночь"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description"
-                    value="Полночь - это дверь, ведущая в волшебную даль. За ней могут скрываться история первой любви и украденный попугай Хемингуэя, самозародившиеся знойным летом зло в людском обличье и заводной Бернард Шоу, воскресенье в Дублине и отпуск в Мексике у подножия грозного вулкана. В этих двадцати двух рассказах - квинтэссенция зрелого Брэдбери, на полпути от Золотых яблок Солнца к Вождению вслепую."/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Борис Стругацкий"/>
+            <column name="description" value="Борис Стругацкий"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Истории о динозаврах"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description"
-                    value="1. Этот сборник всемирно известного классика Рэя Брэдбери впервые выходит на русском языке именно таким, каким его задумал автор! Полный цикл рассказов о динозаврах в авторском составе и последовательности.2. Самый знаменитый рассказ этого цикла был экранизирован и известен широкой публике по фильму «И грянул гром…».3. Эти истории заставляют задуматься и будят воображение. 4. Книги Рэя Брэдбери обязательно должны быть в читательском багаже будущего взрослого, они входит в золотой фонт мировой литературы. 5. Динозавры остаются одним из самых популярных детских увлечений вот уже много десятилетий. Новые открытия, фильмы и книги только подстегивают этот интерес, стимулируя любознательность, тягу к новым знаниям, желание быть спецом в любимой теме. Эта книга must have для всех любителей!"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Пауло Коэльо"/>
+            <column name="description" value="Пауло Коэльо"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="К западу от Октября"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description"
-                    value="В спальне захолустного мотеля на почетном месте стоит надгробный камень. Древний ирландский призрак преследует знаменитого кинорежиссера всей силой своей нерастраченной любви. Герою-авиатору Первой мировой войны мнится, что ему выставлен счет за былые победы. От современного классика американской литературы - двадцать три истории о любви и смерти."/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Джордж Р. Р. Мартин"/>
+            <column name="description" value="Джордж Р. Р. Мартин"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="В мгновенье ока"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description" value="Марсианин"/>
+        <insert tableName="author">
+            <column name="photo" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
+            <column name="name" value="Януш Вишневский"/>
+            <column name="description" value="Януш Вишневский"/>
         </insert>
-        <insert tableName="course">
-            <column name="created_date" value="2022-10-31 20:00:00"/>
-            <column name="updated_date" value="2022-10-31 20:00:00"/>
-            <column name="title" value="Надвигается беда"/>
-            <column name="image" value="https://dummyimage.com/476x715.png/5fa2dd/ffffff"/>
-            <column name="description"
-                    value="Серьезное и тяжелое произведение Рэя Брэдбери, наполненное метафорами, различными символами и мистикой. Брэдбери раскрывает противостояния светлого и темного начал в человеке, выводя на свет самые затаенные желания, страхи и искушения под масками жителей Гринтауна, сталкивающихся с мрачными Людьми Осени."/>
+    </changeSet>
+    <changeSet id="23" author="stimur1709">
+        <insert tableName="item2author">
+            <column name="item_id" value="1"/>
+            <column name="author_id" value="1"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="2"/>
+            <column name="author_id" value="2"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="3"/>
+            <column name="author_id" value="1"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="4"/>
+            <column name="author_id" value="2"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="5"/>
+            <column name="author_id" value="3"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="6"/>
+            <column name="author_id" value="4"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="7"/>
+            <column name="author_id" value="3"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="8"/>
+            <column name="author_id" value="5"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="9"/>
+            <column name="author_id" value="6"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="10"/>
+            <column name="author_id" value="5"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="11"/>
+            <column name="author_id" value="7"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="12"/>
+            <column name="author_id" value="8"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="13"/>
+            <column name="author_id" value="9"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="13"/>
+            <column name="author_id" value="10"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="14"/>
+            <column name="author_id" value="11"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="15"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="16"/>
+            <column name="author_id" value="13"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="17"/>
+            <column name="author_id" value="14"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="18"/>
+            <column name="author_id" value="15"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="19"/>
+            <column name="author_id" value="16"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="20"/>
+            <column name="author_id" value="17"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="21"/>
+            <column name="author_id" value="18"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="22"/>
+            <column name="author_id" value="19"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="23"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="24"/>
+            <column name="author_id" value="21"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="25"/>
+            <column name="author_id" value="22"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="26"/>
+            <column name="author_id" value="23"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="27"/>
+            <column name="author_id" value="9"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="27"/>
+            <column name="author_id" value="10"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="28"/>
+            <column name="author_id" value="15"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="29"/>
+            <column name="author_id" value="25"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="30"/>
+            <column name="author_id" value="26"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="31"/>
+            <column name="author_id" value="11"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="32"/>
+            <column name="author_id" value="15"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="33"/>
+            <column name="author_id" value="27"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="34"/>
+            <column name="author_id" value="28"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="35"/>
+            <column name="author_id" value="29"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="36"/>
+            <column name="author_id" value="30"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="37"/>
+            <column name="author_id" value="31"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="38"/>
+            <column name="author_id" value="32"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="39"/>
+            <column name="author_id" value="33"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="40"/>
+            <column name="author_id" value="2"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="41"/>
+            <column name="author_id" value="34"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="42"/>
+            <column name="author_id" value="35"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="43"/>
+            <column name="author_id" value="11"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="44"/>
+            <column name="author_id" value="36"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="44"/>
+            <column name="author_id" value="37"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="45"/>
+            <column name="author_id" value="38"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="46"/>
+            <column name="author_id" value="2"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="47"/>
+            <column name="author_id" value="11"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="48"/>
+            <column name="author_id" value="39"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="49"/>
+            <column name="author_id" value="11"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="50"/>
+            <column name="author_id" value="24"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="51"/>
+            <column name="author_id" value="12"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="52"/>
+            <column name="author_id" value="40"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="53"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="54"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="55"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="56"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="57"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="58"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="59"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="60"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="61"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="62"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="63"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="64"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="65"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="66"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="67"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="68"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="69"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="70"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="71"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="72"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="73"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="74"/>
+            <column name="author_id" value="20"/>
+        </insert>
+        <insert tableName="item2author">
+            <column name="item_id" value="75"/>
+            <column name="author_id" value="20"/>
         </insert>
     </changeSet>
 </databaseChangeLog>
