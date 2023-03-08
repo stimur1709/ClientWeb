@@ -1,5 +1,6 @@
 package com.example.clientweb.controller;
 
+import com.example.clientweb.data.dto.AuthorDto;
 import com.example.clientweb.data.model.Author;
 import com.example.clientweb.service.AuthorService;
 import com.example.clientweb.util.BindingResultResponse;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/author")
-public class AuthorController extends ModelControllerImpl<Author, AuthorService> {
+public class AuthorController extends ModelControllerImpl<AuthorDto, Author, AuthorService> {
 
     @Autowired
     protected AuthorController(AuthorService service, BindingResultResponse bindingResultResponse) {

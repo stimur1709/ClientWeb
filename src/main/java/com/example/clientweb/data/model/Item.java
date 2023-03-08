@@ -1,7 +1,8 @@
 package com.example.clientweb.data.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.hibernate.Hibernate;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -12,21 +13,15 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @Entity
 public class Item extends Model {
 
     private String title;
-
     private String image;
-
     private String description;
-
     private double rate;
-
     private double popularity;
-
     private int duration;
 
     @Column(name = "type_id")
@@ -46,8 +41,6 @@ public class Item extends Model {
     @JoinTable(name = "item2author",
             joinColumns = @JoinColumn(name = "item_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id"))
-    @JsonManagedReference
-    @ToString.Exclude
     private List<Author> authors;
 
     @Override

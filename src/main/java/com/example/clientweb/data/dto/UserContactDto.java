@@ -9,7 +9,6 @@ import lombok.Setter;
 public class UserContactDto extends Dto {
 
     private ContactType type;
-
     private String contact;
 
 }

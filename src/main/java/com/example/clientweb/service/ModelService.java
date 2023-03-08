@@ -1,17 +1,18 @@
 package com.example.clientweb.service;
 
+import com.example.clientweb.data.dto.Dto;
 import com.example.clientweb.data.model.Model;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.web.multipart.MultipartFile;
 
-public interface ModelService<E extends Model> {
+public interface ModelService<D extends Dto, M extends Model> {
 
-    Page<E> findAll(int itemType, PageRequest of);
+    Page<D> findAll(int itemType, PageRequest of);
 
-    E findById(Integer id);
+    D findByIdDto(Integer id);
 
-    E save(E entity, MultipartFile file);
+    M findById(Integer id);
 
+    D save(M model);
 
 }
