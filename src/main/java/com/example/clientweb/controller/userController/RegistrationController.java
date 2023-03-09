@@ -33,7 +33,7 @@ public class RegistrationController {
 
     @PostMapping()
     public ResponseEntity<?> registration(@RequestBody @Valid RegistrationDto registrationDTO,
-                                                            BindingResult bindingResult) {
+                                          BindingResult bindingResult) {
         registrationValidator.validate(registrationDTO, bindingResult);
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(bindingResultResponse.getMessage(bindingResult), HttpStatus.OK);

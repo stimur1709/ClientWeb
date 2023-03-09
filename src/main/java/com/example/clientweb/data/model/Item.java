@@ -1,24 +1,19 @@
 package com.example.clientweb.data.model;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.hibernate.Hibernate;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
 @Entity
 public class Item extends Model {
 
     private String title;
-    private String image;
     private String description;
     private double rate;
     private double popularity;
@@ -43,16 +38,8 @@ public class Item extends Model {
             inverseJoinColumns = @JoinColumn(name = "author_id"))
     private List<Author> authors;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Item item = (Item) o;
-        return id != null && Objects.equals(id, item.id);
-    }
+    @ManyToOne
+    @JoinColumn(name = "image_id")
+    private Image image;
 
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }

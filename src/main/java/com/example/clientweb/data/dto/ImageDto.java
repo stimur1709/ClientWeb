@@ -5,11 +5,10 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
+
 @Getter
 @Setter
-public class AuthorDto extends Dto implements Serializable {
-
+public class ImageDto extends Dto implements Serializable {
+    private String path;
     private String name;
-    private String description;
-    private ImageDto image;
 }

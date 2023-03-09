@@ -37,4 +37,4 @@ profile:
   loginAttempts: 5
   blockTimeMinUser: 5
   upload:
-    path: src/main/resources/img
+    path: C:\Users\Admin\Desktop\dev\Spring\ClientWeb\src\main\resources\img

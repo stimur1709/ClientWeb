@@ -22,6 +22,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserContactService userContactService;
     private final ModelMapper modelMapper;
+
     @Autowired
     public UserService(UserRepository userRepository, JWTUtil jwtUtil, PasswordEncoder passwordEncoder,
                        UserContactService userContactService, ModelMapper modelMapper) {

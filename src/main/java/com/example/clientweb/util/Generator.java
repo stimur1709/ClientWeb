@@ -47,7 +47,7 @@ public class Generator {
             String minutes1 = ' ' + messageSource.getMessage("message.minutes1", null, localeResolver.resolveLocale(request));
             String minutes2 = ' ' + messageSource.getMessage("message.minutes2", null, localeResolver.resolveLocale(request));
             value = 5 - time / 60000;
-            result = value == 1 ?  minute : value == 5 ? minutes1 : minutes2;
+            result = value == 1 ? minute : value == 5 ? minutes1 : minutes2;
         }
 
         return "Вход заблокирован. Попробуйте через " + value + result;

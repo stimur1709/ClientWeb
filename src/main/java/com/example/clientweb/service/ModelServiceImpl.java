@@ -2,12 +2,15 @@ package com.example.clientweb.service;
 
 import com.example.clientweb.data.dto.Dto;
 import com.example.clientweb.data.model.Model;
-import com.example.clientweb.repository.EntityRepository;
+import com.example.clientweb.repository.ModelRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-public abstract class ModelServiceImpl<M extends Model, D extends Dto, R extends EntityRepository<M>>
+import java.util.List;
+import java.util.stream.Collectors;
+
+public abstract class ModelServiceImpl<M extends Model, D extends Dto, R extends ModelRepository<M>>
         implements ModelService<D, M> {
 
     protected R repository;
@@ -27,7 +30,7 @@ public abstract class ModelServiceImpl<M extends Model, D extends Dto, R extends
 
     @Override
     public D findByIdDto(Integer id) {
-        return repository.findById(id).map(e -> modelMapper.map(e, dto)).orElse(null);
+        return repository.findById(id).map(m -> modelMapper.map(m, dto)).orElse(null);
     }
 
     @Override
@@ -39,5 +42,10 @@ public abstract class ModelServiceImpl<M extends Model, D extends Dto, R extends
     @Override
     public M findById(Integer id) {
         return repository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<D> saveAll(List<M> list) {
+        return repository.saveAll(list).stream().map(m -> modelMapper.map(m, dto)).collect(Collectors.toList());
     }
 }

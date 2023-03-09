@@ -23,7 +23,7 @@ public class AuthorService extends ModelServiceImpl<Author, AuthorDto, AuthorRep
             if (author != null) {
                 author.setName(model.getName());
                 author.setDescription(model.getDescription());
-                author.setPhoto(model.getPhoto());
+//                author.setImage(model.getImage());
                 author.setItems(model.getItems());
             }
             return super.save(author);

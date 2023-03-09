@@ -37,7 +37,7 @@ public class UserController {
     @Operation(summary = "Смена пароля",
             description = "Запрос на смену пароля у пользователя.")
     public ResponseEntity<?> changePassword(@RequestBody @Valid PasswordDto passwordDTO, BindingResult bindingResult,
-                                                         HttpServletRequest request) {
+                                            HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(bindingResultResponse.getMessage(bindingResult), HttpStatus.CONFLICT);
         }

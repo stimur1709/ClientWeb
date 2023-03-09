@@ -25,7 +25,8 @@ public abstract class ModelControllerImpl<D extends Dto, M extends Model, S exte
     @Override
     public ResponseEntity<Page<D>> getPage(int itemType, int page, int size, boolean reverse, String sort) {
         PageRequest pageRequest = PageRequest.of(page, size, reverse ? Sort.Direction.ASC : Sort.Direction.DESC, sort);
-        return new ResponseEntity<>(service.findAll(itemType, pageRequest), HttpStatus.OK);
+        Page<D> all = service.findAll(itemType, pageRequest);
+        return new ResponseEntity<>(all, HttpStatus.OK);
     }
 
     @Override
@@ -33,7 +34,7 @@ public abstract class ModelControllerImpl<D extends Dto, M extends Model, S exte
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(bindingResultResponse.getMessage(bindingResult), HttpStatus.CONFLICT);
         }
-        return new ResponseEntity<>(service.save(model), HttpStatus.OK) ;
+        return new ResponseEntity<>(service.save(model), HttpStatus.OK);
     }
 
     @Override

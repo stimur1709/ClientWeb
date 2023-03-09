@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .authorizeRequests()
                 .antMatchers("/api/profile/**").hasAnyRole("ADMIN", "USER", "MODERATOR")
-                .antMatchers( HttpMethod.OPTIONS, "/api/**", "/api/auth/login", "/api/registration", "/swagger-ui/*").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/api/**", "/api/auth/login", "/api/registration", "/swagger-ui/*").permitAll()
                 .and()
                 .logout().logoutUrl("/api/logout").logoutSuccessHandler(logoutSuccessHandler())
                 .and()

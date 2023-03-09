@@ -20,9 +20,9 @@ public interface ModelController<D extends Dto, M extends Model> {
             "key property to sort by 'sort' " +
             "reverse == true ? Sort.Direction.ASC : Sort.Direction.DESC")
     ResponseEntity<Page<D>> getPage(@RequestParam(value = "itemType", defaultValue = "0") int itemType,
-                    @RequestParam("page") int page, @RequestParam("size") int size,
-                    @RequestParam(value = "reverse", defaultValue = "true") boolean reverse,
-                    @RequestParam(value = "sort", defaultValue = "id") String sort);
+                                    @RequestParam("page") int page, @RequestParam("size") int size,
+                                    @RequestParam(value = "reverse", defaultValue = "true") boolean reverse,
+                                    @RequestParam(value = "sort", defaultValue = "id") String sort);
 
     @GetMapping("/{id}")
     ResponseEntity<D> getEducation(@PathVariable("id") int id);
