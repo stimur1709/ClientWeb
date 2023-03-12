@@ -7,7 +7,6 @@ import com.example.clientweb.service.userService.ClientUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -55,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .authorizeRequests()
                 .antMatchers("/api/profile/**").hasAnyRole("ADMIN", "USER", "MODERATOR")
-                .antMatchers(HttpMethod.OPTIONS, "/api/**", "/api/auth/login", "/api/registration", "/swagger-ui/*").permitAll()
+                .antMatchers("/api/**", "/api/auth/login", "/api/registration", "/swagger-ui/*").permitAll()
                 .and()
                 .logout().logoutUrl("/api/logout").logoutSuccessHandler(logoutSuccessHandler())
                 .and()
