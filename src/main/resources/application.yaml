@@ -33,8 +33,8 @@ spring:
 profile:
   jwt:
     key: t911ur00
-    expirationDay: 1
+    expirationDay: 3
   loginAttempts: 5
   blockTimeMinUser: 5
   upload:
-    path: C:\Users\Admin\Desktop\dev\Spring\ClientWeb\src\main\resources\img
+    path: src\main\resources\img

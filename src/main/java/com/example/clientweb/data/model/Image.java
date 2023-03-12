@@ -10,12 +10,10 @@ import javax.persistence.Entity;
 @Setter
 public class Image extends Model {
 
-    private String path;
     private String name;
     private long size;
 
-    public Image(String path, String name, long size) {
-        this.path = path;
+    public Image(String name, long size) {
         this.name = name;
         this.size = size;
     }

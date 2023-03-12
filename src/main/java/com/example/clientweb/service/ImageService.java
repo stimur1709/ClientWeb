@@ -37,7 +37,7 @@ public class ImageService extends ModelServiceImpl<Image, ImageDto, ImageReposit
             if (file.getContentType() != null) {
                 String fileName = UUID.randomUUID() + "." + FilenameUtils.getExtension(file.getOriginalFilename());
                 Path path = Paths.get(uploadPath, fileName);
-                images.add(new Image(File.separator, fileName, file.getSize()));
+                images.add(new Image(fileName, file.getSize()));
                 file.transferTo(path);
             }
         }
@@ -46,28 +46,8 @@ public class ImageService extends ModelServiceImpl<Image, ImageDto, ImageReposit
 
     @Override
     public ImageDto save(Image model) {
-        //todo перемещение картинок доделать
-        String s = File.separator;
         Image image = findById(model.getId());
-        String sourceUri = uploadPath + image.getPath() + image.getName();
-        System.out.println(sourceUri);
-        String targetUri = uploadPath + s + "123" + s;
-        System.out.println(targetUri);
-        try {
-            Path source = Paths.get(sourceUri);
-            File file = new File(targetUri);
-            Path target = Paths.get(targetUri + model.getName());
-            System.out.println(target);
-            if (file.isDirectory()) {
-                System.out.println(111);
-                Files.move(source, target);
-            } else if (file.mkdirs()) {
-                Files.move(source, target);
-                System.out.println(222);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        model.setName(image.getName());
         return super.save(model);
     }
 }

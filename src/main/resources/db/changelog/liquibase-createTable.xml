@@ -1126,7 +1126,6 @@
                 <constraints primaryKey="true" primaryKeyName="image_pkey"/>
             </column>
             <column name="name" type="varchar(52)"/>
-            <column name="path" type="varchar(512)"/>
             <column name="size" type="bigint"/>
         </createTable>
     </changeSet>
