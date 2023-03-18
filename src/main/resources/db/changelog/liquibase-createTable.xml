@@ -1137,4 +1137,7 @@
         <addForeignKeyConstraint baseTableName="author" baseColumnNames="image_id" constraintName="fkigqauth4r46mag0sl4csnwp72"
                                  referencedColumnNames="id" referencedTableName="users" onDelete="SET NULL" deferrable="false"/>
     </changeSet>
+    <changeSet id="27" author="stimur1709">
+        <sqlFile path="db/changelog/scripts/trigger-user-up.sql"/>
+    </changeSet>
 </databaseChangeLog>

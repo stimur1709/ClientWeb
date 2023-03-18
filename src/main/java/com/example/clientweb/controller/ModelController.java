@@ -1,7 +1,6 @@
 package com.example.clientweb.controller;
 
 import com.example.clientweb.data.dto.Dto;
-import com.example.clientweb.data.model.Model;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -10,10 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-public interface ModelController<D extends Dto, M extends Model> {
+public interface ModelController<D extends Dto> {
 
     @PostMapping(value = "/save")
-    ResponseEntity<?> save(@RequestBody @Valid M model, BindingResult bindingResult);
+    ResponseEntity<?> save(@RequestBody @Valid D dto, BindingResult bindingResult);
 
     @GetMapping
     @Operation(description = "'page' abd 'size' required parameters for the request. " +

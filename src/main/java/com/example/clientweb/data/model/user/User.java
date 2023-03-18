@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -43,7 +42,6 @@ public class User extends Model {
     private Date loginTime;
 
     @OneToMany(mappedBy = "user")
-    @NotNull(message = "Не указан контакт")
     private List<UserContact> userContact;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -64,9 +62,4 @@ public class User extends Model {
     public User() {
     }
 
-    @Override
-    @NotNull(message = "Не указан id")
-    public Integer getId() {
-        return super.getId();
-    }
 }

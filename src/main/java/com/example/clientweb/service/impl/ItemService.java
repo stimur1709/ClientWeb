@@ -18,7 +18,7 @@ public class ItemService extends ModelServiceImpl<Item, ItemDto, ItemRepository>
 
     @Autowired
     public ItemService(ItemRepository repository, ModelMapper modelMapper, MessageLocale messageLocale) {
-        super(repository, ItemDto.class, modelMapper, messageLocale);
+        super(repository, ItemDto.class, Item.class, modelMapper, messageLocale);
     }
 
     @Override
@@ -31,18 +31,18 @@ public class ItemService extends ModelServiceImpl<Item, ItemDto, ItemRepository>
     }
 
     @Override
-    public ItemDto save(Item model) throws Exception {
-        if (model.getId() != null) {
-            Item item = findById(model.getId());
-            if (item != null) {
-                item.setTitle(model.getTitle());
-                item.setDescription(model.getDescription());
-                item.setImage(model.getImage());
-                item.setAuthors(model.getAuthors());
-            }
-            return super.save(item);
+    public ItemDto save(ItemDto dto) throws Exception {
+        if (dto.getId() != null) {
+            Item itemDto = modelMapper.map(dto, Item.class);
+            Item item = findById(dto.getId());
+            item.setTitle(dto.getTitle());
+            item.setDescription(dto.getDescription());
+            item.setImage(itemDto.getImage());
+            item.setAuthors(itemDto.getAuthors());
+            return modelMapper.map(repository.save(item), ItemDto.class);
         } else {
-            return super.save(model);
+            return super.save(dto);
         }
     }
+
 }

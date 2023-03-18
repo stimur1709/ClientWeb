@@ -9,6 +9,6 @@ public interface UserContactRepository extends ModelRepository<UserContact> {
 
     Optional<UserContact> findByContactAndType(String mail, ContactType type);
 
-    UserContact findByContactIgnoreCase(String contact);
+    Optional<UserContact> findByContactIgnoreCase(String contact);
 
 }

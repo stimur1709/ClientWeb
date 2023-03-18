@@ -1,7 +1,6 @@
 package com.example.clientweb.controller;
 
 import com.example.clientweb.data.dto.Dto;
-import com.example.clientweb.data.dto.ErrorDto;
 import com.example.clientweb.data.model.Model;
 import com.example.clientweb.service.ModelService;
 import com.example.clientweb.util.BindingResultResponse;
@@ -13,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 
 public abstract class ModelControllerImpl<D extends Dto, M extends Model, S extends ModelService<D, M>>
-        implements ModelController<D, M> {
+        implements ModelController<D> {
 
     protected final S service;
 
@@ -29,15 +28,16 @@ public abstract class ModelControllerImpl<D extends Dto, M extends Model, S exte
     }
 
     @Override
-    public ResponseEntity<?> save(M model, BindingResult bindingResult) {
+    public ResponseEntity<?> save(D dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(BindingResultResponse.getMessage(bindingResult), HttpStatus.CONFLICT);
         }
         try {
-            return new ResponseEntity<>(service.save(model), HttpStatus.OK);
+            return new ResponseEntity<>(service.save(dto), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ErrorDto(e.getMessage()), HttpStatus.CONFLICT);
+            throw new RuntimeException(e);
         }
+
     }
 
     @Override

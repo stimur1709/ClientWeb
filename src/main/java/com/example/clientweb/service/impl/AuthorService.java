@@ -14,21 +14,18 @@ public class AuthorService extends ModelServiceImpl<Author, AuthorDto, AuthorRep
 
     @Autowired
     public AuthorService(AuthorRepository repository, ModelMapper modelMapper, MessageLocale messageLocale) {
-        super(repository, AuthorDto.class, modelMapper, messageLocale);
+        super(repository, AuthorDto.class, Author.class, modelMapper, messageLocale);
     }
 
     @Override
-    public AuthorDto save(Author model) throws Exception {
-        if (model.getId() != null) {
-            Author author = findById(model.getId());
-            if (author != null) {
-                author.setName(model.getName());
-                author.setDescription(model.getDescription());
-                author.setItems(model.getItems());
-            }
-            return super.save(author);
+    public AuthorDto save(AuthorDto dto) throws Exception {
+        if (dto.getId() != null) {
+            Author author = findById(dto.getId());
+                author.setName(dto.getName());
+                author.setDescription(dto.getDescription());
+            return modelMapper.map(repository.save(author), AuthorDto.class);
         } else {
-            return super.save(model);
+            return super.save(dto);
         }
     }
 }

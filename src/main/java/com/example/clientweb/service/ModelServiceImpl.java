@@ -18,12 +18,14 @@ public abstract class ModelServiceImpl<M extends Model, D extends Dto, R extends
     protected final ModelMapper modelMapper;
     protected MessageLocale messageLocale;
     private final Class<D> dto;
+    private final Class<M> model;
 
-    public ModelServiceImpl(R repository, Class<D> dto, ModelMapper modelMapper, MessageLocale messageLocale) {
+    public ModelServiceImpl(R repository, Class<D> dto, Class<M> model, ModelMapper modelMapper, MessageLocale messageLocale) {
         this.repository = repository;
         this.dto = dto;
         this.modelMapper = modelMapper;
         this.messageLocale = messageLocale;
+        this.model = model;
     }
 
     @Override
@@ -37,7 +39,8 @@ public abstract class ModelServiceImpl<M extends Model, D extends Dto, R extends
     }
 
     @Override
-    public D save(M model) throws Exception {
+    public D save(D dto) throws Exception {
+        M model = modelMapper.map(dto, this.model);
         return modelMapper.map(repository.save(model), this.dto);
     }
 

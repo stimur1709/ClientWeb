@@ -27,7 +27,7 @@ public class ImageService extends ModelServiceImpl<Image, ImageDto, ImageReposit
     private String uploadPath;
 
     public ImageService(ImageRepository repository, ModelMapper modelMapper, MessageLocale messageLocale) {
-        super(repository, ImageDto.class, modelMapper, messageLocale);
+        super(repository, ImageDto.class, Image.class, modelMapper, messageLocale);
     }
 
     public List<ImageDto> saveImage(MultipartFile[] files) throws IOException {
@@ -47,9 +47,9 @@ public class ImageService extends ModelServiceImpl<Image, ImageDto, ImageReposit
     }
 
     @Override
-    public ImageDto save(Image model) throws Exception {
-        Image image = findById(model.getId());
-        model.setName(image.getName());
-        return super.save(model);
+    public ImageDto save(ImageDto dto) throws Exception {
+        Image image = findById(dto.getId());
+        dto.setName(image.getName());
+        return super.save(dto);
     }
 }
