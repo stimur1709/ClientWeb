@@ -7,5 +7,6 @@ import lombok.Setter;
 @Setter
 public class Dto {
 
-    private int id;
+    private Integer id;
+
 }

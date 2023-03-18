@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Getter
@@ -18,9 +19,11 @@ public class RegistrationDto {
     private String username;
 
     @Size(min = 2, max = 100, message = "{message.firstname}")
+    @NotNull(message = "{message.firstname}")
     private String firstname;
 
     @Size(min = 2, max = 100, message = "{message.lastname}")
+    @NotNull(message = "{message.lastname}")
     private String lastname;
 
     @NotEmpty(message = "{message.validMail}")

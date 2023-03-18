@@ -25,5 +25,5 @@ public interface ModelController<D extends Dto, M extends Model> {
                                     @RequestParam(value = "sort", defaultValue = "id") String sort);
 
     @GetMapping("/{id}")
-    ResponseEntity<D> getEducation(@PathVariable("id") int id);
+    ResponseEntity<D> getDto(@PathVariable("id") int id);
 }

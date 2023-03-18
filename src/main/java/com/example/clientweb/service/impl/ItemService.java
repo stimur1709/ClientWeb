@@ -1,8 +1,10 @@
-package com.example.clientweb.service;
+package com.example.clientweb.service.impl;
 
 import com.example.clientweb.data.dto.ItemDto;
 import com.example.clientweb.data.model.Item;
 import com.example.clientweb.repository.ItemRepository;
+import com.example.clientweb.service.ModelServiceImpl;
+import com.example.clientweb.util.MessageLocale;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,8 +17,8 @@ import java.util.Arrays;
 public class ItemService extends ModelServiceImpl<Item, ItemDto, ItemRepository> {
 
     @Autowired
-    public ItemService(ItemRepository repository, ModelMapper modelMapper) {
-        super(repository, ItemDto.class, modelMapper);
+    public ItemService(ItemRepository repository, ModelMapper modelMapper, MessageLocale messageLocale) {
+        super(repository, ItemDto.class, modelMapper, messageLocale);
     }
 
     @Override
@@ -29,7 +31,7 @@ public class ItemService extends ModelServiceImpl<Item, ItemDto, ItemRepository>
     }
 
     @Override
-    public ItemDto save(Item model) {
+    public ItemDto save(Item model) throws Exception {
         if (model.getId() != null) {
             Item item = findById(model.getId());
             if (item != null) {

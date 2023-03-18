@@ -1,9 +1,6 @@
-package com.example.clientweb.config;
+package com.example.clientweb.security;
 
-import com.example.clientweb.security.CustomLogoutSuccessHandler;
-import com.example.clientweb.security.JwtFilter;
-import com.example.clientweb.service.userService.BlacklistService;
-import com.example.clientweb.service.userService.ClientUserDetailsService;
+import com.example.clientweb.service.BlacklistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -53,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers("/api/profile/**").hasAnyRole("ADMIN", "USER", "MODERATOR")
+                .antMatchers("/api/user/profile/**", "/api/user/profiles/**", "/api/user/save").hasAnyRole("ADMIN", "USER", "MODERATOR")
                 .antMatchers("/api/**", "/api/auth/login", "/api/registration", "/swagger-ui/*").permitAll()
                 .and()
                 .logout().logoutUrl("/api/logout").logoutSuccessHandler(logoutSuccessHandler())

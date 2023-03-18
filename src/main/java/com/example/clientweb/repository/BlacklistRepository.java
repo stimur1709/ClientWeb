@@ -1,4 +1,4 @@
-package com.example.clientweb.repository.userRepository;
+package com.example.clientweb.repository;
 
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;

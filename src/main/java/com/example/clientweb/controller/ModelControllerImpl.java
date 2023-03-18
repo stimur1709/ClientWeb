@@ -1,6 +1,7 @@
 package com.example.clientweb.controller;
 
 import com.example.clientweb.data.dto.Dto;
+import com.example.clientweb.data.dto.ErrorDto;
 import com.example.clientweb.data.model.Model;
 import com.example.clientweb.service.ModelService;
 import com.example.clientweb.util.BindingResultResponse;
@@ -15,11 +16,9 @@ public abstract class ModelControllerImpl<D extends Dto, M extends Model, S exte
         implements ModelController<D, M> {
 
     protected final S service;
-    protected final BindingResultResponse bindingResultResponse;
 
-    protected ModelControllerImpl(S service, BindingResultResponse bindingResultResponse) {
+    protected ModelControllerImpl(S service) {
         this.service = service;
-        this.bindingResultResponse = bindingResultResponse;
     }
 
     @Override
@@ -32,13 +31,17 @@ public abstract class ModelControllerImpl<D extends Dto, M extends Model, S exte
     @Override
     public ResponseEntity<?> save(M model, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(bindingResultResponse.getMessage(bindingResult), HttpStatus.CONFLICT);
+            return new ResponseEntity<>(BindingResultResponse.getMessage(bindingResult), HttpStatus.CONFLICT);
         }
-        return new ResponseEntity<>(service.save(model), HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(service.save(model), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ErrorDto(e.getMessage()), HttpStatus.CONFLICT);
+        }
     }
 
     @Override
-    public ResponseEntity<D> getEducation(int id) {
+    public ResponseEntity<D> getDto(int id) {
         return new ResponseEntity<>(service.findByIdDto(id), HttpStatus.OK);
     }
 }

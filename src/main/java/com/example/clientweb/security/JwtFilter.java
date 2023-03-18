@@ -1,8 +1,7 @@
 package com.example.clientweb.security;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.example.clientweb.service.userService.BlacklistService;
-import com.example.clientweb.service.userService.ClientUserDetailsService;
+import com.example.clientweb.service.BlacklistService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -71,10 +70,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
 
     private boolean checkUrl(String url) {
-        List<String> urls = List.of("/api/profile");
+        List<String> urls = List.of("/api/user/profile", "/api/user/profiles", "/api/user/save");
         boolean result = false;
         for (String u : urls) {
-            result = url.contains(u);
+            if (url.contains(u)) {
+                return true;
+            }
         }
         return result;
     }

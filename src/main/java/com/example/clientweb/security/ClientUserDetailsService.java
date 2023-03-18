@@ -1,7 +1,7 @@
-package com.example.clientweb.service.userService;
+package com.example.clientweb.security;
 
-import com.example.clientweb.data.model.user.ClientUserDetails;
 import com.example.clientweb.data.model.user.User;
+import com.example.clientweb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,20 +13,20 @@ import java.util.Optional;
 @Service
 public class ClientUserDetailsService implements UserDetailsService {
 
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ClientUserDetailsService(UserService userService) {
-        this.userService = userService;
+    public ClientUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userService.findUserByUsername(username);
+        Optional<User> user = userRepository.findByUsernameIgnoreCase(username);
 
-        if (user.isPresent())
+        if (user.isPresent()) {
             return new ClientUserDetails(user.get());
-
+        }
         throw new UsernameNotFoundException("Пользователь не найден");
     }
 }

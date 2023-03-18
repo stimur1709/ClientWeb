@@ -1,6 +1,6 @@
 package com.example.clientweb.security;
 
-import com.example.clientweb.service.userService.BlacklistService;
+import com.example.clientweb.service.BlacklistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;

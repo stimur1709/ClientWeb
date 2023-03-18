@@ -1,8 +1,9 @@
 package com.example.clientweb.util;
 
 import com.example.clientweb.data.dto.RegistrationDto;
-import com.example.clientweb.service.userService.UserContactService;
-import com.example.clientweb.service.userService.UserService;
+import com.example.clientweb.data.model.user.ContactType;
+import com.example.clientweb.repository.UserContactRepository;
+import com.example.clientweb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
@@ -16,17 +17,16 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class RegistrationValidator implements Validator {
 
-    private final UserService userService;
-    private final UserContactService userContactService;
+    private final UserRepository userRepository;
+    private final UserContactRepository userContactRepository;
     private final MessageSource messageSource;
     private final LocaleResolver localeResolver;
     private final HttpServletRequest request;
 
     @Autowired
-    public RegistrationValidator(UserService userService, UserContactService userContactService,
-                                 MessageSource messageSource, LocaleResolver localeResolver, HttpServletRequest request) {
-        this.userService = userService;
-        this.userContactService = userContactService;
+    public RegistrationValidator(UserRepository userRepository, UserContactRepository userContactRepository, MessageSource messageSource, LocaleResolver localeResolver, HttpServletRequest request) {
+        this.userRepository = userRepository;
+        this.userContactRepository = userContactRepository;
         this.messageSource = messageSource;
         this.localeResolver = localeResolver;
         this.request = request;
@@ -41,12 +41,12 @@ public class RegistrationValidator implements Validator {
     public void validate(@NonNull Object target, @NonNull Errors errors) {
         RegistrationDto registrationDTO = (RegistrationDto) target;
 
-        if (userService.findUserByUsername(registrationDTO.getUsername()).isPresent()) {
+        if (userRepository.findByUsernameIgnoreCase(registrationDTO.getUsername()).isPresent()) {
             String message = messageSource.getMessage("message.loginBusy", null, localeResolver.resolveLocale(request));
             errors.rejectValue("username", "", message);
         }
 
-        if (userContactService.findByMail(registrationDTO.getEmail()).isPresent()) {
+        if (userContactRepository.findByContactAndType(registrationDTO.getEmail(), ContactType.MAIL).isPresent()) {
             String message = messageSource.getMessage("message.mailBusy", null, localeResolver.resolveLocale(request));
             errors.rejectValue("email", "", message);
         }

@@ -10,7 +10,7 @@ import java.util.Map;
 @Component
 public class BindingResultResponse {
 
-    public Map<String, Object> getMessage(BindingResult bindingResult) {
+    public static Map<String, Object> getMessage(BindingResult bindingResult) {
         Map<String, Object> response = new HashMap<>();
         for (FieldError fieldError : bindingResult.getFieldErrors()) {
             response.put(fieldError.getField(), fieldError.getDefaultMessage());

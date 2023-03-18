@@ -1,7 +1,6 @@
 package com.example.clientweb.data.model.user;
 
 import com.example.clientweb.data.model.Model;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,11 +14,6 @@ import java.util.Date;
 @Table(name = "user_contact")
 @Schema(description = "Сущность контакта пользователя")
 public class UserContact extends Model {
-
-    @ManyToOne(cascade = {CascadeType.MERGE})
-    @JoinColumn(name = "user_id", columnDefinition = "INT")
-    @JsonBackReference
-    private User user;
 
     @Enumerated(EnumType.STRING)
     private ContactType type;
@@ -39,6 +33,10 @@ public class UserContact extends Model {
     @Column(unique = true, columnDefinition = "VARCHAR(255) NOT NULL")
     private String contact;
 
+    @ManyToOne(cascade = {CascadeType.MERGE})
+    @JoinColumn(name = "user_id", columnDefinition = "INT")
+    private User user;
+
     public UserContact(User user, ContactType type, String contact, String code) {
         this.user = user;
         this.type = type;
@@ -48,6 +46,5 @@ public class UserContact extends Model {
     }
 
     public UserContact() {
-
     }
 }

@@ -15,7 +15,7 @@ public interface ModelService<D extends Dto, M extends Model> {
 
     M findById(Integer id);
 
-    D save(M model);
+    D save(M model) throws Exception;
 
     List<D> saveAll(List<M> list);
 

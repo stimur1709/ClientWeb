@@ -1,12 +1,12 @@
 package com.example.clientweb.data.model.user;
 
 import com.example.clientweb.data.model.Model;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -43,14 +43,13 @@ public class User extends Model {
     private Date loginTime;
 
     @OneToMany(mappedBy = "user")
-    @JsonManagedReference
+    @NotNull(message = "Не указан контакт")
     private List<UserContact> userContact;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user2Role",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
-    @JsonManagedReference
     private List<UserRole> userRoles;
 
     public User(String password, String username, String firstname, String lastname) {
@@ -63,5 +62,11 @@ public class User extends Model {
     }
 
     public User() {
+    }
+
+    @Override
+    @NotNull(message = "Не указан id")
+    public Integer getId() {
+        return super.getId();
     }
 }

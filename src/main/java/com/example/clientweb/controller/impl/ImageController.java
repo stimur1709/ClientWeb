@@ -1,9 +1,9 @@
-package com.example.clientweb.controller;
+package com.example.clientweb.controller.impl;
 
+import com.example.clientweb.controller.ModelControllerImpl;
 import com.example.clientweb.data.dto.ImageDto;
 import com.example.clientweb.data.model.Image;
-import com.example.clientweb.service.ImageService;
-import com.example.clientweb.util.BindingResultResponse;
+import com.example.clientweb.service.impl.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +20,8 @@ import java.io.IOException;
 public class ImageController extends ModelControllerImpl<ImageDto, Image, ImageService> {
 
     @Autowired
-    protected ImageController(ImageService service, BindingResultResponse bindingResultResponse) {
-        super(service, bindingResultResponse);
+    protected ImageController(ImageService service) {
+        super(service);
     }
 
     @PostMapping(value = "/file")

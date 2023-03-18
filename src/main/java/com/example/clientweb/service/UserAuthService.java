@@ -1,21 +1,23 @@
-package com.example.clientweb.service.userService;
+package com.example.clientweb.service;
 
 import com.example.clientweb.data.dto.AuthDto;
 import com.example.clientweb.data.dto.AuthenticationDto;
-import com.example.clientweb.data.model.user.User;
-import com.example.clientweb.data.model.user.UserRole;
+import com.example.clientweb.data.dto.RegistrationDto;
+import com.example.clientweb.data.model.user.*;
+import com.example.clientweb.repository.UserContactRepository;
+import com.example.clientweb.repository.UserRepository;
 import com.example.clientweb.security.JWTUtil;
 import com.example.clientweb.util.Generator;
+import com.example.clientweb.util.MessageLocale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.LocaleResolver;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -24,38 +26,38 @@ import java.util.stream.Collectors;
 @Service
 public class UserAuthService {
 
-    private final UserService userService;
+    private final UserRepository userRepository;
+    private final BlacklistService blacklistService;
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
-    private final BlacklistService blacklistService;
+    private final MessageLocale messageLocale;
     private final Generator generator;
-    private final MessageSource messageSource;
-    private final LocaleResolver localeResolver;
-    private final HttpServletRequest request;
-
+    private final UserRoleService userRoleService;
+    private final PasswordEncoder passwordEncoder;
+    private final UserContactRepository userContactRepository;
     @Value("${profile.loginAttempts}")
     private int loginAttempts;
 
     @Value("${profile.blockTimeMinUser}")
     private long blockTimeMinUser;
 
+
     @Autowired
-    public UserAuthService(UserService userService, AuthenticationManager authenticationManager, JWTUtil jwtUtil,
-                           BlacklistService blacklistService, Generator generator, MessageSource messageSource,
-                           LocaleResolver localeResolver, HttpServletRequest request) {
-        this.userService = userService;
+    public UserAuthService(UserRepository userRepository, BlacklistService blacklistService, AuthenticationManager authenticationManager, JWTUtil jwtUtil, MessageLocale messageLocale, Generator generator, UserRoleService userRoleService, PasswordEncoder passwordEncoder, UserContactRepository userContactRepository) {
+        this.userRepository = userRepository;
+        this.blacklistService = blacklistService;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
-        this.blacklistService = blacklistService;
+        this.messageLocale = messageLocale;
         this.generator = generator;
-        this.messageSource = messageSource;
-        this.localeResolver = localeResolver;
-        this.request = request;
+        this.userRoleService = userRoleService;
+        this.passwordEncoder = passwordEncoder;
+        this.userContactRepository = userContactRepository;
     }
 
     public AuthDto jwtLogin(AuthenticationDto authenticationDTO) {
-        Optional<User> userOptional = userService.findUserByUsername(authenticationDTO.getUsername());
-        String userNotFound = messageSource.getMessage("message.userNotFound", null, localeResolver.resolveLocale(request));
+        Optional<User> userOptional = userRepository.findByUsernameIgnoreCase(authenticationDTO.getUsername());
+        String userNotFound = messageLocale.getMessage("message.userNotFound");
         if (userOptional.isEmpty()) {
             return new AuthDto(userNotFound);
         }
@@ -81,11 +83,11 @@ public class UserAuthService {
             updateLogin(user);
         } catch (BadCredentialsException e) {
             user.setLoginAttempts(user.getLoginAttempts() + 1);
-            userService.save(user);
+            userRepository.save(user);
 
             if (user.getLoginAttempts() >= loginAttempts) {
                 user.setLoginTime(new Date());
-                userService.save(user);
+                userRepository.save(user);
                 return new AuthDto(generator.generatorTextBlockContact(difTime));
             }
 
@@ -101,10 +103,19 @@ public class UserAuthService {
         return new AuthDto(jwtUtil.generateToken(user), roles);
     }
 
-    public void updateLogin(User user) {
-        user.setLoginAttempts(0);
-        user.setLoginTime(new Date());
-        userService.save(user);
+    public AuthDto registrationUser(RegistrationDto registrationDTO) {
+        User user = new User(passwordEncoder.encode(registrationDTO.getPassword()), registrationDTO.getUsername(),
+                registrationDTO.getFirstname(), registrationDTO.getLastname());
+        UserRole role = userRoleService.gerUserRole(Role.ROLE_USER);
+        user.setUserRoles(Collections.singletonList(role));
+        userRepository.save(user);
+        userContactRepository.save(new UserContact(user, ContactType.MAIL, registrationDTO.getEmail(), generator.getSecretCode()));
+        return new AuthDto(jwtUtil.generateToken(user), Collections.singletonList(role.getRole().toString()));
     }
 
+    private void updateLogin(User user) {
+        user.setLoginAttempts(0);
+        user.setLoginTime(new Date());
+        userRepository.save(user);
+    }
 }

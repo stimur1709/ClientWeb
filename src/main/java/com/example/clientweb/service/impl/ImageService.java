@@ -1,8 +1,10 @@
-package com.example.clientweb.service;
+package com.example.clientweb.service.impl;
 
 import com.example.clientweb.data.dto.ImageDto;
 import com.example.clientweb.data.model.Image;
 import com.example.clientweb.repository.ImageRepository;
+import com.example.clientweb.service.ModelServiceImpl;
+import com.example.clientweb.util.MessageLocale;
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,8 +26,8 @@ public class ImageService extends ModelServiceImpl<Image, ImageDto, ImageReposit
     @Value("${profile.upload.path}")
     private String uploadPath;
 
-    public ImageService(ImageRepository repository, ModelMapper modelMapper) {
-        super(repository, ImageDto.class, modelMapper);
+    public ImageService(ImageRepository repository, ModelMapper modelMapper, MessageLocale messageLocale) {
+        super(repository, ImageDto.class, modelMapper, messageLocale);
     }
 
     public List<ImageDto> saveImage(MultipartFile[] files) throws IOException {
@@ -45,7 +47,7 @@ public class ImageService extends ModelServiceImpl<Image, ImageDto, ImageReposit
     }
 
     @Override
-    public ImageDto save(Image model) {
+    public ImageDto save(Image model) throws Exception {
         Image image = findById(model.getId());
         model.setName(image.getName());
         return super.save(model);

@@ -1,6 +1,6 @@
-package com.example.clientweb.service.userService;
+package com.example.clientweb.service;
 
-import com.example.clientweb.repository.userRepository.BlacklistRepository;
+import com.example.clientweb.repository.BlacklistRepository;
 import com.example.clientweb.security.JWTUtil;
 import org.springframework.stereotype.Service;
 

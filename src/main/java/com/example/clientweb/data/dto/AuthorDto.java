@@ -12,4 +12,5 @@ public class AuthorDto extends Dto implements Serializable {
     private String name;
     private String description;
     private ImageDto image;
+
 }
