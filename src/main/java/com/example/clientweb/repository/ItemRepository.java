@@ -7,5 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ItemRepository extends ModelRepository<Item> {
+
     Page<Item> findByTypeId(int typeId, Pageable pageable);
+
 }
