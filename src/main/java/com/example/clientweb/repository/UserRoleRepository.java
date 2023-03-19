@@ -1,7 +1,7 @@
 package com.example.clientweb.repository;
 
-import com.example.clientweb.data.model.user.Role;
-import com.example.clientweb.data.model.user.UserRole;
+import com.example.clientweb.data.model.Role;
+import com.example.clientweb.data.model.UserRole;
 
 public interface UserRoleRepository extends ModelRepository<UserRole> {
 

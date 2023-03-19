@@ -2,6 +2,7 @@ package com.example.clientweb.service;
 
 import com.example.clientweb.data.dto.Dto;
 import com.example.clientweb.data.model.Model;
+import com.example.clientweb.errors.SaveException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -15,7 +16,7 @@ public interface ModelService<D extends Dto, M extends Model> {
 
     M findById(Integer id);
 
-    D save(D dto) throws Exception;
+    D save(D dto) throws SaveException;
 
     List<D> saveAll(List<M> list);
 

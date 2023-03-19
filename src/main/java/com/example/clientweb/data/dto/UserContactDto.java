@@ -1,6 +1,6 @@
 package com.example.clientweb.data.dto;
 
-import com.example.clientweb.data.model.user.ContactType;
+import com.example.clientweb.data.model.ContactType;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -2,6 +2,7 @@ package com.example.clientweb.service.impl;
 
 import com.example.clientweb.data.dto.ItemDto;
 import com.example.clientweb.data.model.Item;
+import com.example.clientweb.errors.SaveException;
 import com.example.clientweb.repository.ItemRepository;
 import com.example.clientweb.service.ModelServiceImpl;
 import com.example.clientweb.util.MessageLocale;
@@ -31,7 +32,7 @@ public class ItemService extends ModelServiceImpl<Item, ItemDto, ItemRepository>
     }
 
     @Override
-    public ItemDto save(ItemDto dto) throws Exception {
+    public ItemDto save(ItemDto dto) throws SaveException {
         if (dto.getId() != null) {
             Item itemDto = modelMapper.map(dto, Item.class);
             Item item = findById(dto.getId());

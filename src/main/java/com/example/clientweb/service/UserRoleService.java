@@ -1,7 +1,7 @@
 package com.example.clientweb.service;
 
-import com.example.clientweb.data.model.user.Role;
-import com.example.clientweb.data.model.user.UserRole;
+import com.example.clientweb.data.model.Role;
+import com.example.clientweb.data.model.UserRole;
 import com.example.clientweb.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

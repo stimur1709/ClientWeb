@@ -1,6 +1,6 @@
 package com.example.clientweb.security;
 
-import com.example.clientweb.data.model.user.User;
+import com.example.clientweb.data.model.User;
 import com.example.clientweb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

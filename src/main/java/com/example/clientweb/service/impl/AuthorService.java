@@ -2,6 +2,7 @@ package com.example.clientweb.service.impl;
 
 import com.example.clientweb.data.dto.AuthorDto;
 import com.example.clientweb.data.model.Author;
+import com.example.clientweb.errors.SaveException;
 import com.example.clientweb.repository.AuthorRepository;
 import com.example.clientweb.service.ModelServiceImpl;
 import com.example.clientweb.util.MessageLocale;
@@ -18,7 +19,7 @@ public class AuthorService extends ModelServiceImpl<Author, AuthorDto, AuthorRep
     }
 
     @Override
-    public AuthorDto save(AuthorDto dto) throws Exception {
+    public AuthorDto save(AuthorDto dto) throws SaveException {
         if (dto.getId() != null) {
             Author author = findById(dto.getId());
                 author.setName(dto.getName());

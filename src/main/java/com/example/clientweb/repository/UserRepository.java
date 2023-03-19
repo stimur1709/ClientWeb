@@ -1,6 +1,6 @@
 package com.example.clientweb.repository;
 
-import com.example.clientweb.data.model.user.User;
+import com.example.clientweb.data.model.User;
 
 import java.util.Optional;
 

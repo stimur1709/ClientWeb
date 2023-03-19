@@ -7,7 +7,9 @@
             <column autoIncrement="true" name="id" type="serial">
                 <constraints primaryKey="true" primaryKeyName="user_pkey"/>
             </column>
-            <column name="password" type="varchar(255)"/>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
             <column name="reg_time" type="TIMESTAMP(0)" defaultValueDate="now()"/>
             <column defaultValueNumeric="0" name="balance" type="int">
                 <constraints nullable="false"/>
@@ -41,7 +43,7 @@
             <column defaultValueNumeric="0" name="code_trails" type="smallint">
                 <constraints nullable="false"/>
             </column>
-            <column name="code" type="varchar(255)">
+            <column name="code" type="varchar(7)">
                 <constraints nullable="false"/>
             </column>
             <column name="code_time" type="timestamp(0) without time zone">
@@ -61,7 +63,7 @@
     </changeSet>
     <changeSet id="4" author="stimur1709">
         <insert tableName="users">
-            <column name="password" value="$2a$10$f1/nHeAf6p8hfP1MCUOgf.1l1zgf5uL.voiUQGHd3QTpvO7B2ozLC"/>
+            <column name="password" value="$2a$10$ZI8MbOn9QVkao.jvFP7LleMJRsUMUjk1KtXKY0mOJ4YI/hDq3jyoy"/>
             <column name="reg_time" value="2022-10-16 20:00:00"/>
             <column name="username" value="stimur"/>
             <column name="firstname" value="Safin"/>
@@ -1139,5 +1141,9 @@
     </changeSet>
     <changeSet id="27" author="stimur1709">
         <sqlFile path="db/changelog/scripts/trigger-user-up.sql"/>
+    </changeSet>
+    <changeSet id="28" author="stimur1709">
+        <comment>add check contains for tables: users, author, item, user_contact</comment>
+        <sqlFile path="db/changelog/scripts/check-contains.sql"/>
     </changeSet>
 </databaseChangeLog>

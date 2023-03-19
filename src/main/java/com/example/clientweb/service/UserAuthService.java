@@ -3,7 +3,7 @@ package com.example.clientweb.service;
 import com.example.clientweb.data.dto.AuthDto;
 import com.example.clientweb.data.dto.AuthenticationDto;
 import com.example.clientweb.data.dto.RegistrationDto;
-import com.example.clientweb.data.model.user.*;
+import com.example.clientweb.data.model.*;
 import com.example.clientweb.repository.UserContactRepository;
 import com.example.clientweb.repository.UserRepository;
 import com.example.clientweb.security.JWTUtil;

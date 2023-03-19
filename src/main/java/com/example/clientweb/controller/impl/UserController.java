@@ -5,7 +5,7 @@ import com.example.clientweb.data.dto.AuthDto;
 import com.example.clientweb.data.dto.AuthenticationDto;
 import com.example.clientweb.data.dto.RegistrationDto;
 import com.example.clientweb.data.dto.UserDto;
-import com.example.clientweb.data.model.user.User;
+import com.example.clientweb.data.model.User;
 import com.example.clientweb.service.UserAuthService;
 import com.example.clientweb.service.impl.UserService;
 import com.example.clientweb.util.BindingResultResponse;

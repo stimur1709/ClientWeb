@@ -1,6 +1,5 @@
-package com.example.clientweb.data.model.user;
+package com.example.clientweb.data.model;
 
-import com.example.clientweb.data.model.Model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,7 +43,7 @@ public class User extends Model {
     @OneToMany(mappedBy = "user")
     private List<UserContact> userContact;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user2Role",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")})

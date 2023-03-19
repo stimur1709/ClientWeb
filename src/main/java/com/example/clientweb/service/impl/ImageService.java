@@ -2,6 +2,7 @@ package com.example.clientweb.service.impl;
 
 import com.example.clientweb.data.dto.ImageDto;
 import com.example.clientweb.data.model.Image;
+import com.example.clientweb.errors.SaveException;
 import com.example.clientweb.repository.ImageRepository;
 import com.example.clientweb.service.ModelServiceImpl;
 import com.example.clientweb.util.MessageLocale;
@@ -47,7 +48,7 @@ public class ImageService extends ModelServiceImpl<Image, ImageDto, ImageReposit
     }
 
     @Override
-    public ImageDto save(ImageDto dto) throws Exception {
+    public ImageDto save(ImageDto dto) throws SaveException {
         Image image = findById(dto.getId());
         dto.setName(image.getName());
         return super.save(dto);

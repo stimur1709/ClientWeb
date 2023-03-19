@@ -1,6 +1,6 @@
 package com.example.clientweb.security;
 
-import com.example.clientweb.data.model.user.User;
+import com.example.clientweb.data.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

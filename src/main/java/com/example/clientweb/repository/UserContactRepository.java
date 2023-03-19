@@ -1,7 +1,7 @@
 package com.example.clientweb.repository;
 
-import com.example.clientweb.data.model.user.ContactType;
-import com.example.clientweb.data.model.user.UserContact;
+import com.example.clientweb.data.model.ContactType;
+import com.example.clientweb.data.model.UserContact;
 
 import java.util.Optional;
 

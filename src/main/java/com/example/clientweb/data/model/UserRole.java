@@ -1,6 +1,5 @@
-package com.example.clientweb.data.model.user;
+package com.example.clientweb.data.model;
 
-import com.example.clientweb.data.model.Model;
 import lombok.Getter;
 import lombok.Setter;
 

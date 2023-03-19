@@ -1,7 +1,9 @@
 package com.example.clientweb.controller;
 
 import com.example.clientweb.data.dto.Dto;
+import com.example.clientweb.data.dto.ErrorDto;
 import com.example.clientweb.data.model.Model;
+import com.example.clientweb.errors.SaveException;
 import com.example.clientweb.service.ModelService;
 import com.example.clientweb.util.BindingResultResponse;
 import org.springframework.data.domain.Page;
@@ -34,8 +36,8 @@ public abstract class ModelControllerImpl<D extends Dto, M extends Model, S exte
         }
         try {
             return new ResponseEntity<>(service.save(dto), HttpStatus.OK);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (SaveException e) {
+            return new ResponseEntity<>(new ErrorDto(e.getMessage()), HttpStatus.CONFLICT);
         }
 
     }

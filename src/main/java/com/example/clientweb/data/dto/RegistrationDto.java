@@ -12,17 +12,17 @@ import javax.validation.constraints.Size;
 @Setter
 public class RegistrationDto {
 
-    @Size(min = 5, max = 100, message = "{message.password}")
+    @Size(min = 5, max = 255, message = "{message.password}")
     private String password;
 
-    @Size(min = 2, max = 100, message = "{message.username}")
+    @Size(min = 2, max = 255, message = "{message.username}")
     private String username;
 
-    @Size(min = 2, max = 100, message = "{message.firstname}")
+    @Size(min = 2, max = 255, message = "{message.firstname}")
     @NotNull(message = "{message.firstname}")
     private String firstname;
 
-    @Size(min = 2, max = 100, message = "{message.lastname}")
+    @Size(min = 2, max = 255, message = "{message.lastname}")
     @NotNull(message = "{message.lastname}")
     private String lastname;
 
