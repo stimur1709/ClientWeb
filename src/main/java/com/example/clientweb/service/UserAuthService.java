@@ -100,7 +100,7 @@ public class UserAuthService {
 
         List<String> roles = user.getUserRoles().stream().map(UserRole::getRole).map(Enum::toString).collect(Collectors.toList());
 
-        return new AuthDto(jwtUtil.generateToken(user), roles);
+        return new AuthDto(jwtUtil.generateToken(user), roles, user.getId());
     }
 
     public AuthDto registrationUser(RegistrationDto registrationDTO) {
@@ -110,7 +110,7 @@ public class UserAuthService {
         user.setUserRoles(Collections.singletonList(role));
         userRepository.save(user);
         userContactRepository.save(new UserContact(user, ContactType.MAIL, registrationDTO.getEmail(), generator.getSecretCode()));
-        return new AuthDto(jwtUtil.generateToken(user), Collections.singletonList(role.getRole().toString()));
+        return new AuthDto(jwtUtil.generateToken(user), Collections.singletonList(role.getRole().toString()), user.getId());
     }
 
     private void updateLogin(User user) {
