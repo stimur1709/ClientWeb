@@ -10,7 +10,7 @@ import com.example.clientweb.repository.UserRepository;
 import com.example.clientweb.service.ModelServiceImpl;
 import com.example.clientweb.util.Generator;
 import com.example.clientweb.util.MessageLocale;
-import org.modelmapper.ModelMapper;
+import com.example.clientweb.util.ModelMapperUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,8 +25,10 @@ public class UserService extends ModelServiceImpl<User, UserDto, UserRepository>
     private final Generator generator;
 
     @Autowired
-    public UserService(UserRepository repository, ModelMapper modelMapper, MessageLocale messageLocale, PasswordEncoder passwordEncoder, UserContactRepository userContactRepository, Generator generator) {
-        super(repository, UserDto.class, User.class, modelMapper, messageLocale);
+    public UserService(UserRepository repository, MessageLocale messageLocale, PasswordEncoder passwordEncoder,
+                       UserContactRepository userContactRepository, Generator generator,
+                       ModelMapperUtil<User, UserDto> modelMapper) {
+        super(repository,messageLocale, modelMapper);
         this.passwordEncoder = passwordEncoder;
         this.userContactRepository = userContactRepository;
         this.generator = generator;
