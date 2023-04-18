@@ -1132,12 +1132,16 @@
         </createTable>
     </changeSet>
     <changeSet id="25" author="stimur1709">
-        <addForeignKeyConstraint baseTableName="item" baseColumnNames="image_id" constraintName="fkigqitem4r46mag0sl4csnwp72"
-                                 referencedTableName="image" referencedColumnNames="id" onDelete="SET NULL" deferrable="false"/>
+        <addForeignKeyConstraint baseTableName="item" baseColumnNames="image_id"
+                                 constraintName="fkigqitem4r46mag0sl4csnwp72"
+                                 referencedTableName="image" referencedColumnNames="id" onDelete="SET NULL"
+                                 deferrable="false"/>
     </changeSet>
     <changeSet id="26" author="stimur1709">
-        <addForeignKeyConstraint baseTableName="author" baseColumnNames="image_id" constraintName="fkigqauth4r46mag0sl4csnwp72"
-                                 referencedColumnNames="id" referencedTableName="image" onDelete="SET NULL" deferrable="false"/>
+        <addForeignKeyConstraint baseTableName="author" baseColumnNames="image_id"
+                                 constraintName="fkigqauth4r46mag0sl4csnwp72"
+                                 referencedColumnNames="id" referencedTableName="image" onDelete="SET NULL"
+                                 deferrable="false"/>
     </changeSet>
     <changeSet id="27" author="stimur1709">
         <sqlFile path="db/changelog/scripts/trigger-user-up.sql"/>
@@ -1145,5 +1149,40 @@
     <changeSet id="28" author="stimur1709">
         <comment>add check contains for tables: users, author, item, user_contact</comment>
         <sqlFile path="db/changelog/scripts/check-contains.sql"/>
+    </changeSet>
+    <changeSet id="29" author="stimur1709">
+        <comment>creating a table to store user ratings</comment>
+        <createTable tableName="user_ratings">
+            <column autoIncrement="true" name="id" type="serial">
+                <constraints primaryKey="true" primaryKeyName="user_ratings_pkey"/>
+            </column>
+            <column name="user_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_id" type="integer"/>
+            <column name="author_id" type="integer"/>
+            <column name="value" type="smallint" defaultValueNumeric="0"/>
+            <column name="evaluation_time" type="timestamp(0)" defaultValueDate="now()"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="31" author="stimur1709">
+        <comment>creating a foreign key 'ur_user_id_fk'  for a table user_ratings</comment>
+        <addForeignKeyConstraint baseTableName="user_ratings" baseColumnNames="user_id" constraintName="ur_user_id_fk"
+                                 referencedTableName="users" referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="32" author="stimur1709">
+        <comment>creating a foreign key 'ur_item_id_fk' for a table user_ratings</comment>
+        <addForeignKeyConstraint baseTableName="user_ratings" baseColumnNames="item_id" constraintName="ur_item_id_fk"
+                                 referencedTableName="item" referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="33" author="stimur1709">
+        <comment>creating a foreign key 'ur_author_id_fk' for a table user_ratings</comment>
+        <addForeignKeyConstraint baseTableName="user_ratings" baseColumnNames="author_id"
+                                 constraintName="ur_author_id_fk"
+                                 referencedTableName="author" referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="34" author="stimur1709">
+        <comment>added content validation and trigger for user_ratings table</comment>
+        <sqlFile path="db/changelog/scripts/check-contains-user-ratings.sql"/>
     </changeSet>
 </databaseChangeLog>
