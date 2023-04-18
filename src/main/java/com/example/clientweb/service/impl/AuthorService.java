@@ -24,7 +24,7 @@ public class AuthorService extends ModelServiceImpl<Author, AuthorDtoForAuthor, 
             Author author = findById(dto.getId());
                 author.setName(dto.getName());
                 author.setDescription(dto.getDescription());
-            return modelMapper.map(repository.save(author), AuthorDtoForAuthor.class);
+            return converterToDto(repository.save(author));
         } else {
             return super.save(dto);
         }

@@ -25,7 +25,7 @@ public class ItemService extends ModelServiceImpl<Item, ItemDto, ItemRepository>
     @Override
     public Page<ItemDto> findAll(int itemType, PageRequest pageRequest) {
         if (Arrays.asList(1, 2).contains(itemType)) {
-            return repository.findByTypeId(itemType, pageRequest).map(m -> modelMapper.map(m, ItemDto.class));
+            return repository.findByTypeId(itemType, pageRequest).map(converterToDto());
         } else {
             return super.findAll(itemType, pageRequest);
         }
@@ -34,13 +34,13 @@ public class ItemService extends ModelServiceImpl<Item, ItemDto, ItemRepository>
     @Override
     public ItemDto save(ItemDto dto) throws SaveException {
         if (dto.getId() != null) {
-            Item itemDto = modelMapper.map(dto, Item.class);
+            Item itemDto = converterToModel(dto);
             Item item = findById(dto.getId());
             item.setTitle(dto.getTitle());
             item.setDescription(dto.getDescription());
             item.setImage(itemDto.getImage());
             item.setAuthors(itemDto.getAuthors());
-            return modelMapper.map(repository.save(item), ItemDto.class);
+            return converterToDto(repository.save(item));
         } else {
             return super.save(dto);
         }
