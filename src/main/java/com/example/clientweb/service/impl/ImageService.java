@@ -6,9 +6,9 @@ import com.example.clientweb.errors.SaveException;
 import com.example.clientweb.repository.ImageRepository;
 import com.example.clientweb.service.ModelServiceImpl;
 import com.example.clientweb.util.MessageLocale;
-import com.example.clientweb.util.ModelMapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -33,9 +33,9 @@ public class ImageService extends ModelServiceImpl<Image, ImageDto, ImageReposit
     @Value("${profile.upload.path}")
     private String uploadPath;
 
-    public ImageService(ImageRepository repository, MessageLocale messageLocale,
-                        ImageRepository imageRepository, ModelMapperUtil<Image, ImageDto> modelMapper) {
-        super(repository, messageLocale, modelMapper);
+    public ImageService(ImageRepository repository, ModelMapper modelMapper, MessageLocale messageLocale,
+                        ImageRepository imageRepository) {
+        super(repository, ImageDto.class, Image.class, modelMapper, messageLocale);
         this.imageRepository = imageRepository;
     }
 
