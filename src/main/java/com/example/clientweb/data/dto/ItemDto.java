@@ -1,5 +1,6 @@
 package com.example.clientweb.data.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -24,6 +25,7 @@ public class ItemDto extends Dto implements Serializable {
     private int duration;
     private int typeId;
     private Date createdDate;
+    @JsonIgnoreProperties("items")
     private List<AuthorDto> authors;
     private ImageDto image;
 

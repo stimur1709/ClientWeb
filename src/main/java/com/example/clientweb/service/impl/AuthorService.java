@@ -1,6 +1,6 @@
 package com.example.clientweb.service.impl;
 
-import com.example.clientweb.data.dto.AuthorDtoForAuthor;
+import com.example.clientweb.data.dto.AuthorDto;
 import com.example.clientweb.data.model.Author;
 import com.example.clientweb.errors.SaveException;
 import com.example.clientweb.repository.AuthorRepository;
@@ -11,15 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthorService extends ModelServiceImpl<Author, AuthorDtoForAuthor, AuthorRepository> {
+public class AuthorService extends ModelServiceImpl<Author, AuthorDto, AuthorRepository> {
 
     @Autowired
     public AuthorService(AuthorRepository repository, ModelMapper modelMapper, MessageLocale messageLocale) {
-        super(repository, AuthorDtoForAuthor.class, Author.class, modelMapper, messageLocale);
+        super(repository, AuthorDto.class, Author.class, modelMapper, messageLocale);
     }
 
     @Override
-    public AuthorDtoForAuthor save(AuthorDtoForAuthor dto) throws SaveException {
+    public AuthorDto save(AuthorDto dto) throws SaveException {
         if (dto.getId() != null) {
             Author author = findById(dto.getId());
                 author.setName(dto.getName());

@@ -1,5 +1,6 @@
 package com.example.clientweb.data.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -36,6 +37,7 @@ public class Item extends Model {
     @JoinTable(name = "item2author",
             joinColumns = @JoinColumn(name = "item_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id"))
+    @JsonIgnoreProperties("items")
     private List<Author> authors;
 
     @ManyToOne

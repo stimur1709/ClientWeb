@@ -16,5 +16,5 @@ public class ItemController extends ModelControllerImpl<ItemDto, Item, ItemServi
     protected ItemController(ItemService service) {
         super(service);
     }
-    
+
 }
