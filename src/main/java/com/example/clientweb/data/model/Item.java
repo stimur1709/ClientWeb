@@ -1,7 +1,9 @@
 package com.example.clientweb.data.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Formula;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -27,19 +29,29 @@ public class Item extends Model {
     @Column(name = "created_date")
     private Date createdDate;
 
-    @PrePersist
-    private void createDate() {
-        this.createdDate = new Date();
-    }
+    @Formula("0")
+    private int likes;
+
+    @Formula("0")
+    private int dislikes;
+
+    @Formula("0")
+    private Integer rating;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "item2author",
             joinColumns = @JoinColumn(name = "item_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id"))
+    @JsonIgnoreProperties("items")
     private List<Author> authors;
 
     @ManyToOne
     @JoinColumn(name = "image_id")
     private Image image;
+
+    @PrePersist
+    private void createDate() {
+        this.createdDate = new Date();
+    }
 
 }

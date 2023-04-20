@@ -10,7 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+
 
 public abstract class ModelServiceImpl<M extends Model, D extends Dto, R extends ModelRepository<M>>
         implements ModelService<D, M> {
@@ -31,18 +33,18 @@ public abstract class ModelServiceImpl<M extends Model, D extends Dto, R extends
 
     @Override
     public Page<D> findAll(int itemType, PageRequest pageRequest) {
-        return repository.findAll(pageRequest).map(e -> modelMapper.map(e, dto));
+        return repository.findAll(pageRequest).map(converterToDto());
     }
 
     @Override
-    public D findByIdDto(Integer id) {
-        return repository.findById(id).map(m -> modelMapper.map(m, dto)).orElse(null);
+    public D findByIdDto(Integer id)  {
+        return repository.findById(id).map(converterToDto()).orElse(null);
     }
 
     @Override
     public D save(D dto) throws SaveException {
-        M model = modelMapper.map(dto, this.model);
-        return modelMapper.map(repository.save(model), this.dto);
+        M model = converterToModel(dto);
+        return converterToDto(repository.save(model));
     }
 
     @Override
@@ -52,6 +54,18 @@ public abstract class ModelServiceImpl<M extends Model, D extends Dto, R extends
 
     @Override
     public List<D> saveAll(List<M> list) {
-        return repository.saveAll(list).stream().map(m -> modelMapper.map(m, dto)).collect(Collectors.toList());
+        return repository.saveAll(list).stream().map(converterToDto()).collect(Collectors.toList());
+    }
+
+    protected Function<M, D> converterToDto() {
+        return e -> modelMapper.map(e, dto);
+    }
+
+    protected M converterToModel(D dto) {
+        return modelMapper.map(dto, this.model);
+    }
+
+    protected D converterToDto(M model) {
+        return modelMapper.map(model, this.dto);
     }
 }
