@@ -19,6 +19,9 @@ public class AuthorDto extends Dto implements Serializable {
     private String description;
     private ImageDto image;
     private int likes;
+    private int dislikes;
+    private Integer rating;
+
     @JsonIgnoreProperties("authors")
     private List<ItemDto> items;
 }

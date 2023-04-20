@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+
 public abstract class ModelServiceImpl<M extends Model, D extends Dto, R extends ModelRepository<M>>
         implements ModelService<D, M> {
 
@@ -36,7 +37,7 @@ public abstract class ModelServiceImpl<M extends Model, D extends Dto, R extends
     }
 
     @Override
-    public D findByIdDto(Integer id) {
+    public D findByIdDto(Integer id)  {
         return repository.findById(id).map(converterToDto()).orElse(null);
     }
 

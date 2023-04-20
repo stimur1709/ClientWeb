@@ -17,30 +17,42 @@ import java.util.Arrays;
 @Service
 public class ItemService extends ModelServiceImpl<Item, ItemDto, ItemRepository> {
 
+    private final UserRatingsService userRatingsService;
+
     @Autowired
-    public ItemService(ItemRepository repository, ModelMapper modelMapper, MessageLocale messageLocale) {
+    public ItemService(ItemRepository repository, ModelMapper modelMapper, MessageLocale messageLocale,
+                       UserRatingsService userRatingsService) {
         super(repository, ItemDto.class, Item.class, modelMapper, messageLocale);
+        this.userRatingsService = userRatingsService;
     }
 
     @Override
     public Page<ItemDto> findAll(int itemType, PageRequest pageRequest) {
         if (Arrays.asList(1, 2).contains(itemType)) {
-            return repository.findByTypeId(itemType, pageRequest).map(converterToDto());
+            return repository.findItemsByTypeId(itemType, 2, pageRequest).map(converterToDto());
         } else {
-            return super.findAll(itemType, pageRequest);
+            return repository.findItems(itemType, pageRequest).map(converterToDto());
         }
     }
 
     @Override
+    public ItemDto findByIdDto(Integer id) {
+        return repository.findByItem(id, 2).map(converterToDto()).orElse(null);
+    }
+
+    @Override
     public ItemDto save(ItemDto dto) throws SaveException {
-        if (dto.getId() != null) {
+        Integer id = dto.getId();
+        if (id != null) {
             Item itemDto = converterToModel(dto);
-            Item item = findById(dto.getId());
+            Item item = findById(id);
+            item.setRating(userRatingsService.saveRating(dto));
             item.setTitle(dto.getTitle());
             item.setDescription(dto.getDescription());
             item.setImage(itemDto.getImage());
             item.setAuthors(itemDto.getAuthors());
-            return converterToDto(repository.save(item));
+            repository.save(item);
+            return findByIdDto(id);
         } else {
             return super.save(dto);
         }
