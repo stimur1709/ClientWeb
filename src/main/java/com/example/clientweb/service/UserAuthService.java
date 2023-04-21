@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -117,5 +119,18 @@ public class UserAuthService {
         user.setLoginAttempts(0);
         user.setLoginTime(new Date());
         userRepository.save(user);
+    }
+
+    public Integer getAuthUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+           try {
+               return Integer.parseInt(authentication.getName());
+           } catch (NumberFormatException ex) {
+               return null;
+           }
+        } else {
+            return null;
+        }
     }
 }

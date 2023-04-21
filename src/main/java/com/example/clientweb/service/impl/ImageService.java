@@ -5,6 +5,7 @@ import com.example.clientweb.data.model.Image;
 import com.example.clientweb.errors.SaveException;
 import com.example.clientweb.repository.ImageRepository;
 import com.example.clientweb.service.ModelServiceImpl;
+import com.example.clientweb.service.UserAuthService;
 import com.example.clientweb.util.MessageLocale;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -34,8 +35,8 @@ public class ImageService extends ModelServiceImpl<Image, ImageDto, ImageReposit
     private String uploadPath;
 
     public ImageService(ImageRepository repository, ModelMapper modelMapper, MessageLocale messageLocale,
-                        ImageRepository imageRepository) {
-        super(repository, ImageDto.class, Image.class, modelMapper, messageLocale);
+                        ImageRepository imageRepository, UserAuthService userAuthService) {
+        super(repository, ImageDto.class, Image.class, modelMapper, messageLocale, userAuthService);
         this.imageRepository = imageRepository;
     }
 

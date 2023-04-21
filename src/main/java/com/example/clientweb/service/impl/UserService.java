@@ -8,6 +8,7 @@ import com.example.clientweb.errors.SaveException;
 import com.example.clientweb.repository.UserContactRepository;
 import com.example.clientweb.repository.UserRepository;
 import com.example.clientweb.service.ModelServiceImpl;
+import com.example.clientweb.service.UserAuthService;
 import com.example.clientweb.util.Generator;
 import com.example.clientweb.util.MessageLocale;
 import org.modelmapper.ModelMapper;
@@ -25,8 +26,10 @@ public class UserService extends ModelServiceImpl<User, UserDto, UserRepository>
     private final Generator generator;
 
     @Autowired
-    public UserService(UserRepository repository, ModelMapper modelMapper, MessageLocale messageLocale, PasswordEncoder passwordEncoder, UserContactRepository userContactRepository, Generator generator) {
-        super(repository, UserDto.class, User.class, modelMapper, messageLocale);
+    public UserService(UserRepository repository, ModelMapper modelMapper, MessageLocale messageLocale,
+                       PasswordEncoder passwordEncoder, UserContactRepository userContactRepository,
+                       Generator generator, UserAuthService userAuthService) {
+        super(repository, UserDto.class, User.class, modelMapper, messageLocale, userAuthService);
         this.passwordEncoder = passwordEncoder;
         this.userContactRepository = userContactRepository;
         this.generator = generator;
