@@ -3,12 +3,11 @@ package com.example.clientweb.repository;
 import com.example.clientweb.data.model.UserRatings;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface UserRatingsRepository extends ModelRepository<UserRatings> {
 
-    @Async
+//    @Async
     @Transactional
     @Modifying
     @Query(value = "insert into user_ratings(user_id, author_id, value) values (?1, ?2, ?3) " +
@@ -16,7 +15,7 @@ public interface UserRatingsRepository extends ModelRepository<UserRatings> {
             nativeQuery = true)
     void saveAuthorRating(int userId, int authorId, int value);
 
-    @Async
+//    @Async
     @Transactional
     @Modifying
     @Query(value = "insert into user_ratings(user_id, item_id, value) values (?1, ?2, ?3) " +
