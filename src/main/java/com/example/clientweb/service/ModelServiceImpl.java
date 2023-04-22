@@ -17,18 +17,20 @@ import java.util.stream.Collectors;
 public abstract class ModelServiceImpl<M extends Model, D extends Dto, R extends ModelRepository<M>>
         implements ModelService<D, M> {
 
-    protected R repository;
+    protected final R repository;
     protected final ModelMapper modelMapper;
-    protected MessageLocale messageLocale;
+    protected final MessageLocale messageLocale;
+    private final UserAuthService userAuthService;
     private final Class<D> dto;
     private final Class<M> model;
 
-    public ModelServiceImpl(R repository, Class<D> dto, Class<M> model, ModelMapper modelMapper, MessageLocale messageLocale) {
+    public ModelServiceImpl(R repository, Class<D> dto, Class<M> model, ModelMapper modelMapper, MessageLocale messageLocale, UserAuthService userAuthService) {
         this.repository = repository;
         this.dto = dto;
         this.modelMapper = modelMapper;
         this.messageLocale = messageLocale;
         this.model = model;
+        this.userAuthService = userAuthService;
     }
 
     @Override
@@ -37,7 +39,7 @@ public abstract class ModelServiceImpl<M extends Model, D extends Dto, R extends
     }
 
     @Override
-    public D findByIdDto(Integer id)  {
+    public D findByIdDto(Integer id) {
         return repository.findById(id).map(converterToDto()).orElse(null);
     }
 
@@ -67,5 +69,9 @@ public abstract class ModelServiceImpl<M extends Model, D extends Dto, R extends
 
     protected D converterToDto(M model) {
         return modelMapper.map(model, this.dto);
+    }
+
+    protected Integer getUserAuthId() {
+        return userAuthService.getAuthUserId();
     }
 }

@@ -5,6 +5,7 @@ import com.example.clientweb.data.model.Author;
 import com.example.clientweb.errors.SaveException;
 import com.example.clientweb.repository.AuthorRepository;
 import com.example.clientweb.service.ModelServiceImpl;
+import com.example.clientweb.service.UserAuthService;
 import com.example.clientweb.util.MessageLocale;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,8 @@ public class AuthorService extends ModelServiceImpl<Author, AuthorDto, AuthorRep
 
     @Autowired
     public AuthorService(AuthorRepository repository, ModelMapper modelMapper, MessageLocale messageLocale,
-                         UserRatingsService userRatingsService) {
-        super(repository, AuthorDto.class, Author.class, modelMapper, messageLocale);
+                         UserRatingsService userRatingsService, UserAuthService userAuthService) {
+        super(repository, AuthorDto.class, Author.class, modelMapper, messageLocale, userAuthService);
         this.userRatingsService = userRatingsService;
     }
 
@@ -41,11 +42,11 @@ public class AuthorService extends ModelServiceImpl<Author, AuthorDto, AuthorRep
 
     @Override
     public Page<AuthorDto> findAll(int itemType, PageRequest pageRequest) {
-        return repository.findAllAuthor(2, pageRequest).map(converterToDto());
+        return repository.findAllAuthor(getUserAuthId(), pageRequest).map(converterToDto());
     }
 
     @Override
     public AuthorDto findByIdDto(Integer id) {
-        return repository.findByAuthor(id, 2).map(converterToDto()).orElse(null);
+        return repository.findByAuthor(id, getUserAuthId()).map(converterToDto()).orElse(null);
     }
 }

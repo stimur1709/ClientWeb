@@ -16,7 +16,7 @@ public interface AuthorRepository extends ModelRepository<Author> {
             "left join user_ratings ur1 on a.id = ur1.author_id and ur1.user_id = ?1 " +
             "group by a.id, a.image_id, a.name, a.description, ur1.value",
             nativeQuery = true)
-    Page<Author> findAllAuthor(int userId, Pageable pageable);
+    Page<Author> findAllAuthor(Integer userId, Pageable pageable);
 
     @Query(value = "select a.id, a.image_id, a.name, a.description, ur1.value as rating, " +
             "count(ur.id) filter ( where ur.value = 1 ) as likes, count(ur.id) filter ( where ur.value = -1 ) as dislikes " +
@@ -26,5 +26,5 @@ public interface AuthorRepository extends ModelRepository<Author> {
             "where a.id = ?1 " +
             "group by a.id, a.image_id, a.name, a.description, ur1.value",
             nativeQuery = true)
-    Optional<Author> findByAuthor(int authorId, int userId);
+    Optional<Author> findByAuthor(int authorId, Integer userId);
 }
