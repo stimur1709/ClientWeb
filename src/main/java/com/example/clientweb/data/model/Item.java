@@ -36,7 +36,7 @@ public class Item extends Model {
     private int dislikes;
 
     @Formula("0")
-    private Integer rating;
+    private Integer userRating;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "item2author",

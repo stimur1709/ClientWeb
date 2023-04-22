@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface ItemRepository extends ModelRepository<Item> {
 
     @Query(value = "select i.id, i.image_id, i.title, i.popularity, i.rate, i.popularity, i.created_date, i.duration, " +
-            "i.description, i.type_id, ur1.value as rating, " +
+            "i.description, i.type_id, ur1.value as userRating, " +
             "count(ur.id) filter ( where ur.value = 1 ) as likes, count(ur.id) filter ( where ur.value = -1 ) as dislikes " +
             "from item i " +
             "left join user_ratings ur on i.id = ur.item_id " +
@@ -24,7 +24,7 @@ public interface ItemRepository extends ModelRepository<Item> {
     Page<Item> findItemsByTypeId(int typeId, Integer userId, Pageable pageable);
 
     @Query(value = "select i.id, i.image_id, i.title, i.popularity, i.rate, i.popularity, i.created_date, i.duration, " +
-            "i.description, i.type_id, ur1.value as rating, " +
+            "i.description, i.type_id, ur1.value as userRating, " +
             "count(ur.id) filter ( where ur.value = 1 ) as likes, count(ur.id) filter ( where ur.value = -1 ) as dislikes " +
             "from item i " +
             "left join user_ratings ur on i.id = ur.item_id " +
@@ -36,7 +36,7 @@ public interface ItemRepository extends ModelRepository<Item> {
 
 
     @Query(value = "select i.id, i.image_id, i.title, i.popularity, i.rate, i.popularity, i.created_date, i.duration, " +
-            "i.description, i.type_id, ur1.value as rating, " +
+            "i.description, i.type_id, ur1.value as userRating, " +
             "count(ur.id) filter ( where ur.value = 1 ) as likes, count(ur.id) filter ( where ur.value = -1 ) as dislikes " +
             "from item i " +
             "left join user_ratings ur on i.id = ur.item_id " +
