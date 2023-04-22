@@ -21,7 +21,7 @@ public interface ItemRepository extends ModelRepository<Item> {
             "group by i.id, i.image_id, i.title, i.popularity, i.rate, i.popularity, i.created_date, " +
             "i.duration, i.description, i.type_id, ur1.value",
             nativeQuery = true)
-    Page<Item> findItemsByTypeId(int typeId, int userId, Pageable pageable);
+    Page<Item> findItemsByTypeId(int typeId, Integer userId, Pageable pageable);
 
     @Query(value = "select i.id, i.image_id, i.title, i.popularity, i.rate, i.popularity, i.created_date, i.duration, " +
             "i.description, i.type_id, ur1.value as rating, " +
