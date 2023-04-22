@@ -17,10 +17,11 @@ public class UserRatings extends Model {
     private int userId;
 
     @Column(name = "item_id")
-    private int itemId;
+    private Integer itemId;
 
     @Column(name = "author_id")
-    private int authorId;
+    private Integer authorId;
 
     private short value;
+
 }

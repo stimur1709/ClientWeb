@@ -50,6 +50,11 @@ public abstract class ModelServiceImpl<M extends Model, D extends Dto, R extends
     }
 
     @Override
+    public D save(M model) throws SaveException {
+        return converterToDto(repository.save(model));
+    }
+
+    @Override
     public M findById(Integer id) {
         return repository.findById(id).orElse(null);
     }

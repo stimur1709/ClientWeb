@@ -16,13 +16,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthorService extends ModelServiceImpl<Author, AuthorDto, AuthorRepository> {
 
-    private final UserRatingsService userRatingsService;
-
     @Autowired
     public AuthorService(AuthorRepository repository, ModelMapper modelMapper, MessageLocale messageLocale,
-                         UserRatingsService userRatingsService, UserAuthService userAuthService) {
+                         UserAuthService userAuthService) {
         super(repository, AuthorDto.class, Author.class, modelMapper, messageLocale, userAuthService);
-        this.userRatingsService = userRatingsService;
     }
 
     @Override
@@ -30,11 +27,9 @@ public class AuthorService extends ModelServiceImpl<Author, AuthorDto, AuthorRep
         Integer id = dto.getId();
         if (id != null) {
             Author author = findById(id);
-            author.setRating(userRatingsService.saveRating(dto));
             author.setName(dto.getName());
             author.setDescription(dto.getDescription());
-            repository.save(author);
-            return findByIdDto(id);
+            return converterToDto(repository.save(author));
         } else {
             return super.save(dto);
         }
