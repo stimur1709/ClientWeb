@@ -15,8 +15,8 @@ public interface ItemRepository extends ModelRepository<Item> {
             "i.description, i.type_id, ur1.value as rating, " +
             "count(ur.id) filter ( where ur.value = 1 ) as likes, count(ur.id) filter ( where ur.value = -1 ) as dislikes " +
             "from item i " +
-            "left join user_ratings ur on i.id = ur.author_id " +
-            "left join user_ratings ur1 on i.id = ur1.author_id and ur1.user_id = ?2 " +
+            "left join user_ratings ur on i.id = ur.item_id " +
+            "left join user_ratings ur1 on i.id = ur1.item_id and ur1.user_id = ?2 " +
             "where i.type_id = ?1 " +
             "group by i.id, i.image_id, i.title, i.popularity, i.rate, i.popularity, i.created_date, " +
             "i.duration, i.description, i.type_id, ur1.value",
@@ -27,8 +27,8 @@ public interface ItemRepository extends ModelRepository<Item> {
             "i.description, i.type_id, ur1.value as rating, " +
             "count(ur.id) filter ( where ur.value = 1 ) as likes, count(ur.id) filter ( where ur.value = -1 ) as dislikes " +
             "from item i " +
-            "left join user_ratings ur on i.id = ur.author_id " +
-            "left join user_ratings ur1 on i.id = ur1.author_id and ur1.user_id = ?1 " +
+            "left join user_ratings ur on i.id = ur.item_id " +
+            "left join user_ratings ur1 on i.id = ur1.item_id and ur1.user_id = ?1 " +
             "group by i.id, i.image_id, i.title, i.popularity, i.rate, i.popularity, i.created_date, " +
             "i.duration, i.description, i.type_id, ur1.value",
             nativeQuery = true)
@@ -39,8 +39,8 @@ public interface ItemRepository extends ModelRepository<Item> {
             "i.description, i.type_id, ur1.value as rating, " +
             "count(ur.id) filter ( where ur.value = 1 ) as likes, count(ur.id) filter ( where ur.value = -1 ) as dislikes " +
             "from item i " +
-            "left join user_ratings ur on i.id = ur.author_id " +
-            "left join user_ratings ur1 on i.id = ur1.author_id and ur1.user_id = ?2 " +
+            "left join user_ratings ur on i.id = ur.item_id " +
+            "left join user_ratings ur1 on i.id = ur1.item_id and ur1.user_id = ?2 " +
             "where i.id = ?1 " +
             "group by i.id, i.image_id, i.title, i.popularity, i.rate, i.popularity, i.created_date, " +
             "i.duration, i.description, i.type_id, ur1.value",
