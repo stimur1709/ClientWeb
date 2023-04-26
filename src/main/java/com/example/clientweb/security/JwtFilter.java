@@ -33,7 +33,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && !authHeader.isBlank() && authHeader.startsWith("Bearer ") && checkUrl(request.getServletPath())) {
+        if (authHeader != null && !authHeader.isBlank() && authHeader.startsWith("Bearer ")) {
             String jwt = authHeader.substring(7);
             if (jwt.isBlank()) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid JWT Token in Bearer Header");
@@ -54,14 +54,16 @@ public class JwtFilter extends OncePerRequestFilter {
                         }
                     }
                 } catch (JWTVerificationException exc) {
-                    if (exc.getMessage().contains("expired")) {
-                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
-                                exc.getMessage());
-                    } else {
-                        response.sendError(HttpServletResponse.SC_FORBIDDEN,
-                                "Invalid JWT Token");
+                    if (checkUrl(request.getServletPath())) {
+                        if (exc.getMessage().contains("expired")) {
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+                                    exc.getMessage());
+                        } else {
+                            response.sendError(HttpServletResponse.SC_FORBIDDEN,
+                                    "Invalid JWT Token");
+                        }
+                        return;
                     }
-                    return;
                 }
             }
         }
@@ -70,7 +72,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
 
     private boolean checkUrl(String url) {
-        List<String> urls = List.of("/api/user/profile", "/api/user/profiles", "/api/user/save");
+        List<String> urls = List.of("/api/user/profile", "/api/user/profiles", "/api/user/save", "/api/ratings/save");
         boolean result = false;
         for (String u : urls) {
             if (url.contains(u)) {

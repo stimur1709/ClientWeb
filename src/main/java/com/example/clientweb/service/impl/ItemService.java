@@ -18,13 +18,10 @@ import java.util.Arrays;
 @Service
 public class ItemService extends ModelServiceImpl<Item, ItemDto, ItemRepository> {
 
-    private final UserRatingsService userRatingsService;
-
     @Autowired
     public ItemService(ItemRepository repository, ModelMapper modelMapper, MessageLocale messageLocale,
-                       UserRatingsService userRatingsService, UserAuthService userAuthService) {
+                       UserAuthService userAuthService) {
         super(repository, ItemDto.class, Item.class, modelMapper, messageLocale, userAuthService);
-        this.userRatingsService = userRatingsService;
     }
 
     @Override
@@ -47,13 +44,12 @@ public class ItemService extends ModelServiceImpl<Item, ItemDto, ItemRepository>
         if (id != null) {
             Item itemDto = converterToModel(dto);
             Item item = findById(id);
-            item.setRating(userRatingsService.saveRating(dto));
             item.setTitle(dto.getTitle());
             item.setDescription(dto.getDescription());
             item.setImage(itemDto.getImage());
             item.setAuthors(itemDto.getAuthors());
             repository.save(item);
-            return findByIdDto(id);
+            return converterToDto(repository.save(item));
         } else {
             return super.save(dto);
         }

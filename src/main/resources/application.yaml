@@ -27,9 +27,6 @@ spring:
   messages:
     basename: lang.messages
 
-  main:
-    allow-bean-definition-overriding: true
-
 profile:
   jwt:
     key: t911ur00

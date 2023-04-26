@@ -30,6 +30,6 @@ public class ItemDto extends Dto implements Serializable {
     private ImageDto image;
     private int likes;
     private int dislikes;
-    private Integer rating;
+    private Integer userRating;
 
 }

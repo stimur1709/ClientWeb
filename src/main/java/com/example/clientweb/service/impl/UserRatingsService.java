@@ -1,9 +1,8 @@
 package com.example.clientweb.service.impl;
 
-import com.example.clientweb.data.dto.AuthorDto;
-import com.example.clientweb.data.dto.Dto;
-import com.example.clientweb.data.dto.ItemDto;
+import com.example.clientweb.data.dto.UserRatingsDto;
 import com.example.clientweb.data.model.UserRatings;
+import com.example.clientweb.errors.SaveException;
 import com.example.clientweb.repository.UserRatingsRepository;
 import com.example.clientweb.service.ModelServiceImpl;
 import com.example.clientweb.service.UserAuthService;
@@ -13,28 +12,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-
-public class UserRatingsService extends ModelServiceImpl<UserRatings, Dto, UserRatingsRepository> {
+public class UserRatingsService extends ModelServiceImpl<UserRatings, UserRatingsDto, UserRatingsRepository> {
 
     @Autowired
     public UserRatingsService(UserRatingsRepository repository, ModelMapper modelMapper,
                               MessageLocale messageLocale, UserAuthService userAuthService) {
-        super(repository, Dto.class, UserRatings.class, modelMapper, messageLocale, userAuthService);
+        super(repository, UserRatingsDto.class, UserRatings.class, modelMapper, messageLocale, userAuthService);
     }
 
-    public Integer saveRating(ItemDto dto) {
-        Integer userId = getUserAuthId();
-        if (dto.getRating() != null && userId != null) {
-            repository.saveItemRating(userId, dto.getId(), dto.getRating());
+    @Override
+    public UserRatingsDto save(UserRatingsDto dto) throws SaveException {
+        if (dto.getItemId() != null) {
+            repository.saveItemRating(getUserAuthId(), dto.getItemId(), dto.getValue());
+        } else {
+            repository.saveAuthorRating(getUserAuthId(), dto.getAuthorId(), dto.getValue());
         }
-        return dto.getRating();
+        return dto;
     }
 
-    public Integer saveRating(AuthorDto dto) {
-        Integer userId = getUserAuthId();
-        if (dto.getRating() != null && userId != null) {
-            repository.saveAuthorRating(userId, dto.getId(), dto.getRating());
-        }
-        return dto.getRating();
-    }
 }
